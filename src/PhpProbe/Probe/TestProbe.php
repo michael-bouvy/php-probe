@@ -124,4 +124,12 @@ class TestProbe implements ProbeInterface
     {
         return;
     }
+
+    /**
+     * @return array
+     */
+    public function getExpectedOptions()
+    {
+        return array();
+    }
 }
