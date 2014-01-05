@@ -51,9 +51,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function configure(array $options)
     {
-        foreach ($options as $key => $value) {
-            $this->options[$key] = $value;
-        }
+        array_merge($options, $this->options);
         return $this;
     }
 
