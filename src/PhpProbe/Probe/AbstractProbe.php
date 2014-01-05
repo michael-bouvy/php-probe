@@ -58,11 +58,14 @@ abstract class AbstractProbe implements ProbeInterface
     public function configure(array $options)
     {
         foreach ($this->getExpectedOptions() as $expectedOption) {
-            if (isset($expectedOption['name']) && isset($expectedOption['default'])) {
+            if (isset($expectedOption['name'])
+                && isset($expectedOption['default'])
+                && !isset($this->options[$expectedOption['name']])
+            ) {
                 $this->options[$expectedOption['name']] = $expectedOption['default'];
             }
         }
-        array_merge($options, $this->options);
+        $this->options = array_merge($this->options, $options);
         return $this;
     }
 

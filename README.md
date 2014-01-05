@@ -92,6 +92,43 @@ if ($webservice->hasSucceeded()) {
 
 See `example_framework.php`
 
+***
+
+No matter which way you use this library, you can load the probes from a YAML config file, like this example :
+
+```yaml
+probes:
+  Google.com_HTTP:
+    type: Http
+    options:
+      url: http://www.google.com
+      expectedHttpCode: 302
+      timeout: 5
+  Google.fr_HTTPS:
+    type: Http
+    options:
+      url: https://www.google.fr
+      expectedHttpCode: 200
+      timeout: 5
+  Google_DNS:
+    type: Tcp
+    options:
+      host: 8.8.8.8
+      port: 53
+```
+
+See `config_sample.yml`
+
+Then simply load the config file in your code :
+
+```php
+$manager = new PhpProbe\Manager();
+$manager->importConfig('config_sample.yml');
+$manager->checkAll();
+```
+
+See `example_standalone_config.php`
+
 Available probes & adapters
 -----------
 

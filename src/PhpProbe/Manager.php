@@ -2,6 +2,7 @@
 
 namespace PhpProbe;
 
+use PhpProbe\Helper\ProbeHelper;
 use PhpProbe\Probe\ProbeInterface;
 
 /**
@@ -160,5 +161,26 @@ class Manager
     public function getProbes()
     {
         return $this->probes;
+    }
+
+    /**
+     * @param string $fileName Config filename
+     * @param null   $parsingLibrary
+     */
+    public function importConfig($fileName, $parsingLibrary = null)
+    {
+        if (is_null($parsingLibrary)) {
+            $parsingLibrary = new \Symfony\Component\Yaml\Yaml;
+        }
+
+        $probes = $parsingLibrary::parse($fileName)['probes'];
+
+        foreach ($probes as $probeName => $probe) {
+            $className = ProbeHelper::getClassNameFromType($probe['type']);
+            if (class_exists($className)) {
+                $probe = new $className($probeName, $probe['options']);
+                $this->addProbe($probe);
+            }
+        }
     }
 }

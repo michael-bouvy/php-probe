@@ -1,0 +1,18 @@
+probes:
+  Google.com_HTTP:
+    type: Http
+    options:
+      url: http://www.google.com
+      expectedHttpCode: 302
+      timeout: 5
+  Google.fr_HTTPS:
+    type: Http
+    options:
+      url: https://www.google.fr
+      expectedHttpCode: 200
+      timeout: 5
+  Google_DNS:
+    type: Tcp
+    options:
+      host: 8.8.8.8
+      port: 53
