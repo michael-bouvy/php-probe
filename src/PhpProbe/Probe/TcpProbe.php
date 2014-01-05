@@ -15,10 +15,12 @@ use PhpProbe\Exception\ConfigurationException;
 class TcpProbe extends AbstractProbe implements ProbeInterface
 {
     /**
-     * @var array Default options
+     * @var array Expected options
      */
-    protected $options = array(
-        'timeout' => 2
+    protected $expectedOptions = array(
+        array('name' => 'host', 'required' => true,'type' => 'string'),
+        array('name' => 'port', 'required' => true,'type' => 'integer'),
+        array('name' => 'timeout', 'required' => true,'type' => 'integer', 'default' => 2)
     );
 
     /**
@@ -28,7 +30,7 @@ class TcpProbe extends AbstractProbe implements ProbeInterface
      */
     public function __construct($name, $options = array(), AdapterInterface $adapter = null)
     {
-        $this->name    = $name;
+        $this->name = $name;
         $this->configure($options);
 
         if (!is_null($adapter)) {
@@ -65,53 +67,7 @@ class TcpProbe extends AbstractProbe implements ProbeInterface
         }
     }
 
-    /**
-     * Check probe's configuration
-     *
-     * @param array $options
-     *
-     * @throws ConfigurationException
-     */
-    public function checkConfiguration($options = array())
-    {
-        if (count($options)) {
-            $this->configure($options);
-        }
 
-        if (is_null($this->adapter)) {
-            throw new ConfigurationException('No adapter specified');
-        }
-
-        if (!isset($this->options['host'])) {
-            throw new ConfigurationException('No host specified');
-        }
-
-        if (isset($this->options['port']) && !is_long($this->options['port'])) {
-            throw new ConfigurationException(
-                sprintf(
-                    'Bad value type for port : expected long, got %s (value = %s).',
-                    gettype($this->options['port']),
-                    $this->options['port']
-                )
-            );
-        }
-
-        if (!isset($this->options['port'])) {
-            throw new ConfigurationException('No port specified or invalid type.');
-        }
-
-        if (!isset($this->options['timeout'])
-            || (isset($this->options['timeout']) && !is_int($this->options['timeout']))
-        ) {
-            throw new ConfigurationException(
-                sprintf(
-                    'Bad value type for timeout : expected int, got %s (value = %s).',
-                    gettype($this->options['timeout']),
-                    $this->options['timeout']
-                )
-            );
-        }
-    }
 
     /**
      * Set host to check

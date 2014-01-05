@@ -3,6 +3,7 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Exception\ConfigurationException;
 
 /**
  * Class AbstractProbe
@@ -43,6 +44,11 @@ abstract class AbstractProbe implements ProbeInterface
     protected $options = array();
 
     /**
+     * @var array Expected options array
+     */
+    protected $expectedOptions = array();
+
+    /**
      * Configure probe
      *
      * @param array $options
@@ -51,6 +57,11 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function configure(array $options)
     {
+        foreach ($this->getExpectedOptions() as $expectedOption) {
+            if (isset($expectedOption['name']) && isset($expectedOption['default'])) {
+                $this->options[$expectedOption['name']] = $expectedOption['default'];
+            }
+        }
         array_merge($options, $this->options);
         return $this;
     }
@@ -149,5 +160,75 @@ abstract class AbstractProbe implements ProbeInterface
     {
         $this->adapter = $adapter;
         return $this;
+    }
+
+    /**
+     * Check probe's configuration
+     *
+     * @throws ConfigurationException
+     */
+    public function checkConfiguration()
+    {
+        foreach ($this->getExpectedOptions() as $expectedOption) {
+            $name = $expectedOption['name'];
+
+            if (empty($name)) {
+                throw new ConfigurationException("Expected options must have a name.");
+            }
+
+            if (isset($expectedOption['required'])
+                && $expectedOption['required'] === true
+                && !isset($this->options[$name])
+            ) {
+                throw new ConfigurationException(
+                    sprintf(
+                        "%s probe : missing option '%s'.",
+                        $this->getName(),
+                        $name
+                    )
+                );
+            }
+
+            if (isset($this->options[$name])) {
+                $currentOption = $this->options[$name];
+                if (isset($expectedOption['type']) && gettype($currentOption) != $expectedOption['type']) {
+                    throw new ConfigurationException(
+                        sprintf(
+                            "%s probe Bad value type for '%s' ; expected %s, got %s.",
+                            $this->getName(),
+                            $name,
+                            $expectedOption['type'],
+                            gettype($currentOption)
+                        )
+                    );
+                }
+            }
+        }
+
+        $this->checkAdapter();
+    }
+
+    /**
+     * Check if an adapter is set
+     *
+     * TODO : check for compatibility between probe and adapter
+     *
+     * @throws ConfigurationException
+     */
+    public function checkAdapter()
+    {
+        if (is_null($this->adapter)) {
+            throw new ConfigurationException('No adapter specified');
+        }
+    }
+
+    /**
+     * Get the expected options
+     *
+     * @return array
+     */
+    public function getExpectedOptions()
+    {
+        return $this->expectedOptions;
     }
 }

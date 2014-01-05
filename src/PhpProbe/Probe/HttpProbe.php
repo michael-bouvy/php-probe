@@ -15,11 +15,12 @@ use PhpProbe\Exception\ConfigurationException;
 class HttpProbe extends AbstractProbe implements ProbeInterface
 {
     /**
-     * @var array Default options
+     * @var array Expected options
      */
-    protected $options = array(
-        'timeout'          => 2,
-        'expectedHttpCode' => 200
+    protected $expectedOptions = array(
+        array('name' => 'url', 'required' => true, 'type' => 'string'),
+        array('name' => 'timeout', 'required' => true, 'type' => 'integer', 'default' => 2),
+        array('name' => 'expectedHttpCode', 'required' => true, 'type' => 'integer', 'default' => 200)
     );
 
     /**
@@ -29,7 +30,7 @@ class HttpProbe extends AbstractProbe implements ProbeInterface
      */
     public function __construct($name, $options = array(), AdapterInterface $adapter = null)
     {
-        $this->name    = $name;
+        $this->name = $name;
         $this->configure($options);
 
         if (!is_null($adapter)) {
@@ -63,40 +64,6 @@ class HttpProbe extends AbstractProbe implements ProbeInterface
             $this->succeeded();
         } else {
             $this->failed($result);
-        }
-    }
-
-    /**
-     * Check configuration values
-     *
-     * @param array $options
-     *
-     * @throws ConfigurationException
-     */
-    public function checkConfiguration($options = array())
-    {
-        if (count($options)) {
-            $this->configure($options);
-        }
-
-        if (is_null($this->adapter)) {
-            throw new ConfigurationException('No adapter specified');
-        }
-
-        if (!isset($this->options['url'])) {
-            throw new ConfigurationException('No url specified');
-        }
-
-        if (!isset($this->options['timeout'])
-            || (isset($this->options['timeout']) && !is_int($this->options['timeout']))
-        ) {
-            throw new ConfigurationException(
-                sprintf(
-                    'Bad value type for timeout : expected int, got %s (value = %s).',
-                    gettype($this->options['timeout']),
-                    $this->options['timeout']
-                )
-            );
         }
     }
 

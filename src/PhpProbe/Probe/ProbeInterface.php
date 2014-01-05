@@ -68,9 +68,12 @@ interface ProbeInterface
     public function setAdapter(AdapterInterface $adapter);
 
     /**
-     * @param array $options
-     *
      * @return void
      */
-    public function checkConfiguration($options = array());
+    public function checkConfiguration();
+
+    /**
+     * @return array
+     */
+    public function getExpectedOptions();
 }
