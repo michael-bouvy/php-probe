@@ -77,7 +77,7 @@ class Manager
                 $output .= "# " . $probe->getName() . " - Failure (" . $probe->getErrorMessage() . ")\n";
             } else {
                 if ($includeSuccess === true) {
-                    $output .= "#" . $probe->getName() . " - Success\n";
+                    $output .= "# " . $probe->getName() . " - Success\n";
                 }
             }
         }
