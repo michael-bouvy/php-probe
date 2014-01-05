@@ -1,4 +1,4 @@
-PhpProbe
+PhpProbe [![Build Status](https://travis-ci.org/michael-bouvy/php-probe.png?branch=master)](https://travis-ci.org/michael-bouvy/php-probe)
 =========
 
 PhpProbe is a PHP library allowing to simply probe/monitor any applications and services.
