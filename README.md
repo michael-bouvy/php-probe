@@ -141,6 +141,8 @@ Probes rely on adapters : for instance `TcpProbe` can either work with PHP's `fs
  * `NetcatAdapter` (uses `netcat` utility)
 * `HttpProbe` : check for HTTP response code or response content
  * `PhpCurlAdapter` (uses PHP's curl extension)
+* `DatabaseProbe` : check for database connection or existing database
+ * `PhpMysqlAdapter` (uses PHP's mysql extension)
 
 Testing
 -----------
