@@ -23,7 +23,7 @@ Just require the PhpProbe library in your `composer.json` :
 Clone the repository in your project :
 
 ```bash
-git clone https://github.com/michael-bouvy/php-probe
+     $ git clone https://github.com/michael-bouvy/php-probe
 ```
 
 You can use the provided autoloader :
