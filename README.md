@@ -139,8 +139,8 @@ Probes rely on adapters : for instance `TcpProbe` can either work with PHP's `fs
 * `TcpProbe`
  * `FsockopenAdapter` (uses PHP's `fsockopen()` function)
  * `NetcatAdapter` (uses `netcat` utility)
-* `HttpProbe`
- * `PhpCurlAdapter` (uses PHP's curl extension) : check for HTTP response code or response content
+* `HttpProbe` : check for HTTP response code or response content
+ * `PhpCurlAdapter` (uses PHP's curl extension)
 
 Testing
 -----------
