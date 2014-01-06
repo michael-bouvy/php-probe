@@ -173,7 +173,8 @@ class Manager
             $parsingLibrary = new \Symfony\Component\Yaml\Yaml;
         }
 
-        $probes = $parsingLibrary::parse($fileName)['probes'];
+        $parsedFile = $parsingLibrary::parse($fileName);
+        $probes     = $parsedFile['probes'];
 
         foreach ($probes as $probeName => $probe) {
             $className = ProbeHelper::getClassNameFromType($probe['type']);
