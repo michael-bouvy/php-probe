@@ -1,0 +1,9 @@
+probes:
+  testProbe:
+    type: Test
+    options:
+      param: value
+  testProbe2:
+      type: Test
+      options:
+        param: value

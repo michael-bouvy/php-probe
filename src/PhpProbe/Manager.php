@@ -2,6 +2,9 @@
 
 namespace PhpProbe;
 
+use PhpProbe\Exception\ExitException;
+use PhpProbe\Helper\CliHelper;
+use PhpProbe\Helper\HttpHelper;
 use PhpProbe\Helper\ProbeHelper;
 use PhpProbe\Probe\ProbeInterface;
 
@@ -21,13 +24,16 @@ class Manager
     /**
      * @var int
      */
-    protected $failCount = 0;
+    public $failCount = 0;
 
     /**
      * Constructor
      */
     public function __construct()
     {
+        set_exception_handler(
+            CliHelper::getExitExceptionHandler()
+        );
     }
 
     /**
@@ -49,15 +55,16 @@ class Manager
     /**
      * Terminate probing
      *
+     * @throws Exception\ExitException
      * @return void
      */
     public function end()
     {
         if (php_sapi_name() == 'cli') {
-            if ($this->failCount > 0) {
-                exit(1);
+            if ($this->hasFailures()) {
+                throw new ExitException('Success', 1);
             } else {
-                exit(0);
+                throw new ExitException('Failure', 0);
             }
         }
     }
@@ -83,8 +90,10 @@ class Manager
             }
         }
 
-        if ($httpHeader === true) {
-            $this->setHttpHeader();
+        if ($httpHeader === true && $this->hasFailures()) {
+            HttpHelper::setFailHttpHeader();
+        } elseif ($httpHeader === true && !$this->hasFailures()) {
+            HttpHelper::setSuccessHttpHeader();
         }
 
         print $output;
@@ -114,30 +123,15 @@ class Manager
         }
         $htmlOutput .= '</ul>';
 
-        if ($httpHeader === true) {
-            $this->setHttpHeader();
+        if ($httpHeader === true && $this->hasFailures()) {
+            HttpHelper::setFailHttpHeader();
+        } elseif ($httpHeader === true && !$this->hasFailures()) {
+            HttpHelper::setSuccessHttpHeader();
         }
 
         print $htmlOutput;
 
         return $this;
-    }
-
-    /**
-     * Set HTTP headers according to probes' results
-     *
-     * @return void
-     */
-    public function setHttpHeader()
-    {
-        if (php_sapi_name() != 'cli') {
-            if ($this->failCount > 0) {
-                header("Cache-Control: no-cache, max-age=0");
-                header("HTTP/1.1 503 Service Unavailable", null, 503);
-            } else {
-                header("Cache-Control: no-cache, max-age=0");
-            }
-        }
     }
 
     /**
@@ -183,5 +177,15 @@ class Manager
                 $this->addProbe($probe);
             }
         }
+    }
+
+    /**
+     * Check if there have been any probe failure
+     *
+     * @return int
+     */
+    public function hasFailures()
+    {
+        return ($this->failCount > 0);
     }
 }
