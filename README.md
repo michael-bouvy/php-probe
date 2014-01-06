@@ -143,6 +143,10 @@ Probes rely on adapters : for instance `TcpProbe` can either work with PHP's `fs
  * `PhpCurlAdapter` (uses PHP's curl extension)
 * `DatabaseProbe` : check for database connection or existing database
  * `PhpMysqlAdapter` (uses PHP's mysql extension)
+* `TestProbe` : for testing purposes
+ * `TestAdapter`
+
+A `NullAdapter` is also available, always succeeding.
 
 Testing
 -----------
