@@ -23,7 +23,7 @@ Just require the PhpProbe library in your `composer.json` :
 Clone the repository in your project :
 
 ```bash
-     $ git clone https://github.com/michael-bouvy/php-probe
+ $ git clone https://github.com/michael-bouvy/php-probe
 ```
 
 You can use the provided autoloader :
@@ -146,9 +146,11 @@ Testing
 -----------
 
 To run the test suite, you need [composer](http://getcomposer.org).
- 
-     $ php composer.phar install --dev
-     $ vendor/bin/phpunit
+
+```bash
+ $ php composer.phar install --dev
+ $ vendor/bin/phpunit
+```
 
 License
 -----------
