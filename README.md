@@ -1,7 +1,7 @@
 PhpProbe [![Build Status](https://travis-ci.org/michael-bouvy/php-probe.png?branch=master)](https://travis-ci.org/michael-bouvy/php-probe)
 =========
 
-PhpProbe is a PHP library allowing to simply probe/monitor any applications and services.
+PhpProbe is a PHP library allowing to simply probe/monitor any applications and services, and either print results or use them in code.
 
 Installation
 -----------
@@ -140,3 +140,16 @@ Probes rely on adapters : for instance `TcpProbe` can either work with PHP's `fs
  * `NetcatAdapter` (uses `netcat` utility)
 * `HttpProbe`
  * `PhpCurlAdapter` (uses PHP's curl extension)
+
+Testing
+-----------
+
+To run the test suite, you need [composer](http://getcomposer.org).
+ 
+     $ php composer.phar install --dev
+     $ vendor/bin/phpunit
+
+License
+-----------
+
+PhpProbe is licensed under the MIT license.
