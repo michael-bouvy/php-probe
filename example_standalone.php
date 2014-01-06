@@ -12,11 +12,15 @@ $httpProbe->url('http://www.google.com/')->expectedHttpCode(\PhpProbe\Http\Codes
 $httpsProbe = new PhpProbe\Probe\HttpProbe('Google_HTTPS', array(), new \PhpProbe\Adapter\PhpCurlAdapter());
 $httpsProbe->url('https://www.google.com/')->expectedHttpCode(\PhpProbe\Http\Codes::HTTP_FOUND);
 
+$mysqlProbe = new PhpProbe\Probe\DatabaseProbe('MySQL_Local', array(), new \PhpProbe\Adapter\PhpMysqlAdapter());
+$mysqlProbe->host('localhost')->user('root')->password('')->database('mysql');
+
 $manager = new PhpProbe\Manager();
 $manager
     ->addProbe($tcpProbe)
     ->addProbe($httpProbe)
     ->addProbe($httpsProbe)
+    ->addProbe($mysqlProbe)
     ->checkAll();
 
 if (php_sapi_name() == 'cli') {

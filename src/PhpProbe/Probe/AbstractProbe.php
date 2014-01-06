@@ -234,4 +234,25 @@ abstract class AbstractProbe implements ProbeInterface
     {
         return $this->expectedOptions;
     }
+
+    /**
+     * Dynamically set options if method call matches with an expected option
+     *
+     * @param string $name
+     * @param array  $arguments
+     *
+     * @return $this
+     */
+    public function __call($name, $arguments)
+    {
+        $value = array_shift($arguments);
+        $expectedOptions = $this->getExpectedOptions();
+        foreach ($expectedOptions as $expectedOption) {
+            if ($expectedOption['name'] == $name) {
+                $this->options[$name] = $value;
+            }
+        }
+
+        return $this;
+    }
 }

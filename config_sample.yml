@@ -17,3 +17,10 @@ probes:
     options:
       host: 8.8.8.8
       port: 53
+  MySQL_Local:
+    type: Database
+    options:
+      host: localhost
+      user: root
+      password:
+      database: mysql
