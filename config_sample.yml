@@ -11,6 +11,7 @@ probes:
       url: https://www.google.fr
       expectedHttpCode: 200
       timeout: 5
+      contains: <title>Google</title>
   Google_DNS:
     type: Tcp
     options:

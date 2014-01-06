@@ -27,17 +27,21 @@ class PhpCurlAdapter implements AdapterInterface
         $curlHandler = curl_init();
 
         curl_setopt($curlHandler, CURLOPT_URL, $parameters['url']);
-        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 0);
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, isset($parameters['contains']) ? 1 : 0);
         curl_setopt($curlHandler, CURLOPT_HEADER, 0);
 
         ob_start();
-        curl_exec($curlHandler);
+        $content = curl_exec($curlHandler);
         $httpCode = curl_getinfo($curlHandler, CURLINFO_HTTP_CODE);
         curl_close($curlHandler);
         ob_end_clean();
 
         if ($httpCode != $parameters['expectedHttpCode']) {
             return sprintf("Expected HTTP code %d, got %d", $parameters['expectedHttpCode'], $httpCode);
+        }
+
+        if (isset($parameters['contains']) && !mb_strpos($content, $parameters['contains'])) {
+            return sprintf("Expected content '%s' not found in response.", $parameters['contains']);
         }
 
         return true;

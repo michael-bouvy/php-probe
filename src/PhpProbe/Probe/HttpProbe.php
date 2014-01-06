@@ -20,7 +20,8 @@ class HttpProbe extends AbstractProbe implements ProbeInterface
     protected $expectedOptions = array(
         array('name' => 'url', 'required' => true, 'type' => 'string'),
         array('name' => 'timeout', 'required' => true, 'type' => 'integer', 'default' => 2),
-        array('name' => 'expectedHttpCode', 'required' => true, 'type' => 'integer', 'default' => 200)
+        array('name' => 'expectedHttpCode', 'required' => true, 'type' => 'integer', 'default' => 200),
+        array('name' => 'contains', 'required' => false, 'type' => 'string')
     );
 
     /**
@@ -52,13 +53,7 @@ class HttpProbe extends AbstractProbe implements ProbeInterface
     {
         $this->checkConfiguration();
 
-        $result = $this->adapter->check(
-            array(
-                'url'              => $this->options['url'],
-                'timeout'          => $this->options['timeout'],
-                'expectedHttpCode' => $this->options['expectedHttpCode']
-            )
-        );
+        $result = $this->adapter->check($this->options);
 
         if ($result === true) {
             $this->succeeded();
