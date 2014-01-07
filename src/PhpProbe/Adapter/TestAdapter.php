@@ -15,7 +15,7 @@ class TestAdapter implements AdapterInterface
      *
      * @return bool|string
      */
-    public function check(array $parameters)
+    public function check(array $parameters = array())
     {
         return true;
     }
