@@ -49,6 +49,24 @@ abstract class AbstractProbe implements ProbeInterface
     protected $expectedOptions = array();
 
     /**
+     * @param string           $name
+     * @param array            $options
+     * @param AdapterInterface $adapter
+     */
+    public function __construct($name, $options = array(), AdapterInterface $adapter = null)
+    {
+        $this->name = $name;
+        $this->configure($options);
+
+        if (is_null($adapter)) {
+            $adapter = $this->getDefaultAdapter();
+        }
+        $this->setAdapter($adapter);
+
+        return $this;
+    }
+
+    /**
      * Configure probe
      *
      * @param array $options
@@ -67,6 +85,25 @@ abstract class AbstractProbe implements ProbeInterface
         }
         $this->options = array_merge($this->options, $options);
         return $this;
+    }
+
+    /**
+     * Check probe using defined adapter
+     *
+     * @throws ConfigurationException
+     * @return void
+     */
+    public function check()
+    {
+        $this->checkConfiguration();
+
+        $result = $this->adapter->check($this->options);
+
+        if ($result === true) {
+            $this->succeeded();
+        } else {
+            $this->failed($result);
+        }
     }
 
     /**
@@ -254,5 +291,13 @@ abstract class AbstractProbe implements ProbeInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return AdapterInterface|null
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
     }
 }
