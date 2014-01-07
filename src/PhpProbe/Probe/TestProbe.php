@@ -3,6 +3,7 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Adapter\TestAdapter;
 
 /**
  * Class TestProbe
@@ -38,9 +39,10 @@ class TestProbe implements ProbeInterface
     {
         $this->name = $name;
         $this->configure($options);
-        if (!is_null($adapter)) {
-            $this->setAdapter($adapter);
+        if (is_null($adapter)) {
+            $adapter = $this->getDefaultAdapter();
         }
+        $this->setAdapter($adapter);
     }
 
     /**
@@ -131,5 +133,15 @@ class TestProbe implements ProbeInterface
     public function getExpectedOptions()
     {
         return array();
+    }
+
+    /**
+     * Get probe's default adapter
+     *
+     * @return AdapterInterface
+     */
+    public function getDefaultAdapter()
+    {
+        return new TestAdapter();
     }
 }
