@@ -35,6 +35,7 @@ class CliHelper
             if ($exception instanceof ExitException) {
                 CliHelper::doExit($exception->getCode());
             }
+            throw $exception;
         };
     }
 }

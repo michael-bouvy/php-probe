@@ -1,8 +1,6 @@
 <?php
 require __DIR__ . "/../vendor/autoload.php";
 
-error_reporting(~E_ALL);
-
 $tcpProbe = new PhpProbe\Probe\TcpProbe('Google_DNS', array(), new \PhpProbe\Adapter\FsockopenAdapter());
 $tcpProbe->host('8.8.8.8')->port(53);
 
