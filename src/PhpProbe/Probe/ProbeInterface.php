@@ -73,7 +73,17 @@ interface ProbeInterface
     public function checkConfiguration();
 
     /**
+     * Get the full array containing all expected/available options
+     * of the probe.
+     *
      * @return array
      */
     public function getExpectedOptions();
+
+    /**
+     * Get probe's default adapter
+     *
+     * @return AdapterInterface
+     */
+    public function getDefaultAdapter();
 }
