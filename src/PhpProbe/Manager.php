@@ -160,11 +160,17 @@ class Manager
     /**
      * @param string $fileName Config filename
      * @param null   $parsingLibrary
+     *
+     * @throws \RuntimeException
      */
     public function importConfig($fileName, $parsingLibrary = null)
     {
         if (is_null($parsingLibrary)) {
             $parsingLibrary = new \Symfony\Component\Yaml\Yaml;
+        }
+
+        if (!file_exists($fileName)) {
+            throw new \RuntimeException(sprintf("File '%s' does not exist.", $fileName));
         }
 
         $parsedFile = $parsingLibrary::parse($fileName);
