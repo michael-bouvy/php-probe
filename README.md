@@ -69,7 +69,7 @@ $manager
     ->end();
 ```
 
-See `example_standalone.php`
+See `examples/standalone.php`
 
 ####Inside a framework/tool
 
@@ -90,7 +90,7 @@ if ($webservice->hasSucceeded()) {
 }
 ```
 
-See `example_framework.php`
+See `examples/framework.php`
 
 ***
 
@@ -118,7 +118,7 @@ probes:
       port: 53
 ```
 
-See `config_sample.yml`
+See `examples/config.yml`
 
 Then simply load the config file in your code :
 
@@ -128,7 +128,7 @@ $manager->importConfig('config_sample.yml');
 $manager->checkAll();
 ```
 
-See `example_standalone_config.php`
+See `examples/standalone_config.php`
 
 Available probes & adapters
 -----------

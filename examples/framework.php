@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . "/vendor/autoload.php";
+require __DIR__ . "/../vendor/autoload.php";
 
 $webservice = new PhpProbe\Probe\HttpProbe(
     'GitHub_HTTPS',
