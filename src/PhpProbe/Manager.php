@@ -182,7 +182,7 @@ class Manager
     /**
      * Check if there have been any probe failure
      *
-     * @return int
+     * @return bool
      */
     public function hasFailures()
     {
