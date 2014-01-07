@@ -11,8 +11,10 @@ namespace PhpProbe\Adapter;
 interface AdapterInterface
 {
     /**
+     * Returns true on success or error message
+     *
      * @param array $parameters
-     * @return bool
+     * @return bool|string
      */
     public function check(array $parameters);
 }
