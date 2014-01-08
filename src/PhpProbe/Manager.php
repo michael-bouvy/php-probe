@@ -3,7 +3,7 @@
 namespace PhpProbe;
 
 use PhpProbe\Exception\ExitException;
-use PhpProbe\Helper\CliHelper;
+use PhpProbe\Helper\AdapterHelper;
 use PhpProbe\Helper\HttpHelper;
 use PhpProbe\Helper\ProbeHelper;
 use PhpProbe\Probe\ProbeInterface;
@@ -25,16 +25,6 @@ class Manager
      * @var int
      */
     public $failCount = 0;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        set_exception_handler(
-            CliHelper::getExitExceptionHandler()
-        );
-    }
 
     /**
      * Check all probes
@@ -174,14 +164,20 @@ class Manager
         }
 
         $parsedFile = $parsingLibrary::parse($fileName);
-        $probes     = $parsedFile['probes'];
 
-        foreach ($probes as $probeName => $probe) {
+        foreach ($parsedFile['probes'] as $probeName => $probe) {
             $className = ProbeHelper::getClassNameFromType($probe['type']);
-            if (class_exists($className)) {
-                $probe = new $className($probeName, $probe['options']);
-                $this->addProbe($probe);
+
+            /* @var ProbeInterface $probeInstance */
+            $probeInstance = new $className($probeName, $probe['options']);
+
+            if (isset($probe['adapter'])) {
+                $adapterClass = AdapterHelper::getClassNameFromType($probe['adapter']);
+                $adapter      = new $adapterClass();
+                $probeInstance->setAdapter($adapter);
             }
+
+            $this->addProbe($probeInstance);
         }
     }
 

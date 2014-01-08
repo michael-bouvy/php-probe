@@ -2,15 +2,17 @@
 
 namespace PhpProbe\Helper;
 
+use \PhpProbe\Helper\ClassnameResolverTrait;
+
 /**
- * Class ProbeHelper
+ * Class AdapterHelper
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Helper
  */
-class ProbeHelper
+class AdapterHelper
 {
     use ClassnameResolverTrait;
 
-    const OBJECT_TYPE = 'Probe';
+    const OBJECT_TYPE = 'Adapter';
 }
