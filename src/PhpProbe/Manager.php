@@ -4,6 +4,7 @@ namespace PhpProbe;
 
 use PhpProbe\Exception\ExitException;
 use PhpProbe\Helper\AdapterHelper;
+use PhpProbe\Helper\CliHelper;
 use PhpProbe\Helper\HttpHelper;
 use PhpProbe\Helper\ProbeHelper;
 use PhpProbe\Probe\ProbeInterface;
@@ -25,6 +26,16 @@ class Manager
      * @var int
      */
     public $failCount = 0;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        set_exception_handler(
+            CliHelper::getExitExceptionHandler()
+        );
+    }
 
     /**
      * Check all probes
