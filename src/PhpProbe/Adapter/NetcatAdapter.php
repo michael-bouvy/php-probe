@@ -1,6 +1,7 @@
 <?php
 
 namespace PhpProbe\Adapter;
+use Symfony\Component\Process\Process;
 
 /**
  * Class NetcatAdapter
@@ -19,15 +20,17 @@ class NetcatAdapter implements AdapterInterface
      */
     public function check(array $parameters)
     {
-        $command =
-            "nc -vz -w " . $parameters['timeout'] . " "
-            . $parameters['host'] . " " . $parameters['port'] . " 2>&1";
+        $command = "nc -vz -w " . $parameters['timeout'] . " " . $parameters['host'] . " " . $parameters['port'];
 
-        exec($command, $output, $returnCode);
+        $process = new Process($command);
+        // Keep 2 seconds margin from request timeout
+        $process->setTimeout($parameters['timeout'] + 2);
+        $process->run();
 
-        if ($returnCode !== 0) {
-            return sprintf('%s', implode($output, " - "));
+        if (!$process->isSuccessful()) {
+            return sprintf('%s', $process->getErrorOutput());
         }
+
         return true;
     }
 }
