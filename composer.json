@@ -3,7 +3,7 @@
     "description": "PHP library allowing to simply probe/monitor any applications and services.",
     "minimum-stability": "dev",
     "type": "library",
-    "license": "Apache",
+    "license": "MIT",
     "authors": [
         {
             "name": "Michael BOUVY",
