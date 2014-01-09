@@ -21,7 +21,7 @@ class HttpHelper
     {
         if (php_sapi_name() != 'cli' && $force === false) {
             header("Cache-Control: no-cache, max-age=0");
-            header("HTTP/1.1 503 Service Unavailable", null, 503);
+            header("HTTP/1.1 503 Service Unavailable", false, 503);
         }
     }
 

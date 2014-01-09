@@ -1,6 +1,7 @@
 <?php
 
 namespace PhpProbe\Adapter;
+
 use Symfony\Component\Process\Process;
 
 /**
