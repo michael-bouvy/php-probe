@@ -1,3 +1,8 @@
+before_commands:
+    - "composer install --prefer-source"
+filter:
+    paths: [src/*]
+    excluded_paths: [vendor/*, tests/*, examples/*]
 tools:
     php_mess_detector: true
     php_analyzer:
@@ -34,7 +39,7 @@ tools:
             standard: PSR2
     php_code_coverage:
         test_command: phpunit
-        config_path: phpunit.dist.xml
+        config_path: ~
     php_cpd:
         excluded_dirs:
             - tests
