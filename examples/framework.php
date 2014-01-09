@@ -14,4 +14,5 @@ $webservice->check();
 
 if ($webservice->hasSucceeded()) {
     // Do something
+    print "oto";
 }

@@ -211,4 +211,28 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $testProbe = array_shift($probes);
         $this->assertEquals('testProbe', $testProbe->getName());
     }
+
+    /**
+     * @covers PhpProbe\Manager::importConfig
+     */
+    public function testImportConfigWithSpecificAdapter()
+    {
+        $manager = new Manager();
+        $manager->importConfig(__DIR__ . '/../assets/config_manager_with_adapter.yml');
+        $probes = $manager->getProbes();
+        $this->assertCount(1, $probes);
+        /* @var ProbeInterface $testProbe */
+        $testProbe = array_shift($probes);
+        $this->assertInstanceOf('PhpProbe\Adapter\TestAdapter', $testProbe->getAdapter());
+    }
+
+    /**
+     * @covers PhpProbe\Manager::importConfig
+     */
+    public function testImportConfigWithMissingFile()
+    {
+        $manager = new Manager();
+        $this->setExpectedException('\RuntimeException');
+        $manager->importConfig(__DIR__ . '/../assets/missing_config_file.yml');
+    }
 }

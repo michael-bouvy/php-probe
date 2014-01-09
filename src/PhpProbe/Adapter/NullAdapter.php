@@ -2,23 +2,29 @@
 
 namespace PhpProbe\Adapter;
 
+use PhpProbe\Adapter\Reponse\NullAdapterResponse;
+
 /**
  * Class NullAdapter
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter
  */
-class NullAdapter implements AdapterInterface
+class NullAdapter extends AbstractAdapter implements AdapterInterface
 {
     /**
-     * Always return true
-     *
-     * @param array $parameters
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function check(array $parameters)
     {
-        return true;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getResponse()
+    {
+        return new NullAdapterResponse();
     }
 }

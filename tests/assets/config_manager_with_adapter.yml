@@ -1,0 +1,6 @@
+probes:
+  testProbe2:
+      type: Test
+      adapter: Test
+      options:
+        param: value

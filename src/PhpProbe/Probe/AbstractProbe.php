@@ -282,7 +282,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function __call($name, $arguments)
     {
-        $value = array_shift($arguments);
+        $value           = array_shift($arguments);
         $expectedOptions = $this->getExpectedOptions();
         foreach ($expectedOptions as $expectedOption) {
             if ($expectedOption['name'] == $name) {
@@ -294,10 +294,34 @@ abstract class AbstractProbe implements ProbeInterface
     }
 
     /**
+     * Get the adapter associated with probe
+     *
      * @return AdapterInterface|null
      */
     public function getAdapter()
     {
         return $this->adapter;
+    }
+
+    /**
+     * Check a value based on it's expected and actual values
+     *
+     * @param $name
+     * @param $expected
+     * @param $actual
+     */
+    protected function checkValue($name, $expected, $actual)
+    {
+        if (isset($expected) && $expected != $actual) {
+            $reason = sprintf(
+                "Epected value '%s' for '%s', got '%s'",
+                $expected,
+                $name,
+                $actual
+            );
+
+            $this->failed($reason);
+            return;
+        }
     }
 }

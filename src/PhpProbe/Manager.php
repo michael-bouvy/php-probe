@@ -8,6 +8,7 @@ use PhpProbe\Helper\CliHelper;
 use PhpProbe\Helper\HttpHelper;
 use PhpProbe\Helper\ProbeHelper;
 use PhpProbe\Probe\ProbeInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class Manager
@@ -167,7 +168,7 @@ class Manager
     public function importConfig($fileName, $parsingLibrary = null)
     {
         if (is_null($parsingLibrary)) {
-            $parsingLibrary = new \Symfony\Component\Yaml\Yaml;
+            $parsingLibrary = new Yaml;
         }
 
         if (!file_exists($fileName)) {

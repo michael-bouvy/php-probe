@@ -3,6 +3,8 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
+use PhpProbe\Adapter\Reponse\TestAdapterResponse;
 use PhpProbe\Adapter\TestAdapter;
 
 /**
@@ -38,10 +40,14 @@ class TcpProbeTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckWithSuccess()
     {
-        $adapterMock = $this->getMock('PhpProbe\Adapter\TestAdapter', array('check'));
+        $adapterResponse = new TestAdapterResponse();
+        $adapterResponse->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
+
+        $adapterMock = $this->getMock('PhpProbe\Adapter\TestAdapter', array('getResponse'));
         $adapterMock->expects($this->once())
-            ->method('check')
-            ->will($this->returnValue(true));
+            ->method('getResponse')
+            ->will($this->returnValue($adapterResponse));
+
         $probe = new TcpProbe(
             'testTcpProbe',
             array(
@@ -60,11 +66,14 @@ class TcpProbeTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckWithError()
     {
-        $errorMessage = 'Error';
-        $adapterMock  = $this->getMock('PhpProbe\Adapter\TestAdapter', array('check'));
+        $adapterResponse = new TestAdapterResponse();
+        $adapterResponse->setStatus(AdapterResponseInterface::STATUS_FAILED);
+
+        $adapterMock  = $this->getMock('PhpProbe\Adapter\TestAdapter', array('getResponse'));
         $adapterMock->expects($this->once())
-            ->method('check')
-            ->will($this->returnValue($errorMessage));
+            ->method('getResponse')
+            ->will($this->returnValue($adapterResponse));
+
         $probe = new TcpProbe(
             'testTcpProbe',
             array(
@@ -76,7 +85,8 @@ class TcpProbeTest extends \PHPUnit_Framework_TestCase
         /* @var AdapterInterface $adapterMock */
         $probe->setAdapter($adapterMock);
         $probe->check();
-        $this->assertEquals($errorMessage, $probe->getErrorMessage());
+        $this->assertFalse($probe->hasSucceeded());
+//        $this->assertEquals($errorMessage, $probe->getErrorMessage());
     }
 
     /**

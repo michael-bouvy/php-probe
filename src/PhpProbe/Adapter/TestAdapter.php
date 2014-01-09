@@ -2,21 +2,26 @@
 
 namespace PhpProbe\Adapter;
 
+use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
+use PhpProbe\Adapter\Reponse\TestAdapterResponse;
+
 /**
  * Class TestAdapter
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter
  */
-class TestAdapter implements AdapterInterface
+class TestAdapter extends AbstractAdapter implements AdapterInterface
 {
     /**
-     * @param array $parameters
-     *
-     * @return bool|string
+     * {@inheritdoc}
      */
     public function check(array $parameters = array())
     {
-        return true;
+        $response = new TestAdapterResponse();
+        $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
+        $this->setResponse($response);
+
+        return $this;
     }
 }

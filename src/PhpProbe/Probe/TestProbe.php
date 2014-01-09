@@ -13,7 +13,7 @@ use PhpProbe\Adapter\TestAdapter;
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Probe
  */
-class TestProbe implements ProbeInterface
+class TestProbe extends AbstractProbe implements ProbeInterface
 {
     /**
      * @var string

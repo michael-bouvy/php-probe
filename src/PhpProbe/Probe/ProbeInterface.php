@@ -7,11 +7,13 @@ use PhpProbe\Adapter\AdapterInterface;
 /**
  * Interface ProbeInterface
  *
- * @author Michael BOUVY <michael.bouvy@gmail.com>
+ * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Probe
  */
 interface ProbeInterface
 {
+    const NO_REASON_FAIL_MESSAGE = 'Failed with no reason ...';
+
     /**
      * @param string           $name    Probe name
      * @param array            $options Configuration array (optional)
@@ -86,4 +88,9 @@ interface ProbeInterface
      * @return AdapterInterface
      */
     public function getDefaultAdapter();
+
+    /**
+     * @return AdapterInterface
+     */
+    public function getAdapter();
 }

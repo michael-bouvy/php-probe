@@ -15,4 +15,18 @@ class AdapterHelper
     use ClassnameResolverTrait;
 
     const OBJECT_TYPE = 'Adapter';
+
+    /**
+     * Check if a PHP extension is loaded
+     *
+     * @param $extension
+     *
+     * @throws \RuntimeException
+     */
+    public static function checkPhpExtension($extension)
+    {
+        if (!extension_loaded($extension)) {
+            throw new \RuntimeException(sprintf('PHP %s extension is not installed', $extension));
+        }
+    }
 }
