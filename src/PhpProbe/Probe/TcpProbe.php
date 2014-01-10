@@ -28,26 +28,6 @@ class TcpProbe extends AbstractProbe implements ProbeInterface
     );
 
     /**
-     * {@inheritdoc}
-     */
-    public function check()
-    {
-        $this->checkConfiguration();
-
-        $this->adapter->check($this->options);
-
-        /** @var TcpAdapterResponse $response */
-        $response = $this->adapter->getResponse();
-
-        if ($response->isSuccessful()) {
-            $this->succeeded();
-            return;
-        }
-
-        $this->failed($response->getError());
-    }
-
-    /**
      * Get probe's default adapter
      *
      * @return AdapterInterface

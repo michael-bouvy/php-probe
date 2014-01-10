@@ -3,6 +3,7 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
 
 /**
@@ -37,6 +38,11 @@ abstract class AbstractProbe implements ProbeInterface
      * @var AdapterInterface
      */
     protected $adapter = null;
+
+    /**
+     * @var array Checkers list
+     */
+    protected $checkers = array();
 
     /**
      * @var array Options array
@@ -97,13 +103,26 @@ abstract class AbstractProbe implements ProbeInterface
     {
         $this->checkConfiguration();
 
-        $result = $this->adapter->check($this->options);
+        $this->adapter->check($this->options);
+        /** @var AbstractAdapterResponse $response */
+        $response = $this->adapter->getResponse();
 
-        if ($result === true) {
-            $this->succeeded();
-        } else {
-            $this->failed($result);
+        $errors = array();
+        foreach ($this->checkers as $checker) {
+            $_errors = $checker->check($response);
+            $errors = array_merge($errors, $_errors);
         }
+
+        if (!empty($errors)) {
+            $this->failed(implode($errors, "\n"));
+        }
+
+        if ($response->isSuccessful()) {
+            $this->succeeded();
+            return;
+        }
+
+        $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
     }
 
     /**
@@ -260,6 +279,20 @@ abstract class AbstractProbe implements ProbeInterface
         if (is_null($this->adapter)) {
             throw new ConfigurationException('No adapter specified');
         }
+    }
+
+    /**
+     * Add a checker object for this probe
+     *
+     * @param CheckInterface $check The checker
+     *
+     * @return $this
+     */
+    public function addChecker(CheckInterface $check)
+    {
+        $this->checkers[] = $check;
+
+        return $this;
     }
 
     /**

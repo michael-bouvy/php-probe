@@ -3,15 +3,19 @@ probes:
     type: Http
     options:
       url: http://www.google.com
-      expectedHttpCode: 302
       timeout: 5
+    checkers:
+      http:
+        HttpCode: 302
   Google.fr_HTTPS:
     type: Http
     options:
       url: https://www.google.fr
-      expectedHttpCode: 200
       timeout: 5
-      contains: <title>Google</title>
+    checkers:
+      http:
+        HttpCode: 200
+        Content: <title>Goorrgle</title>
   Google_DNS:
     type: Tcp
     adapter: Netcat
