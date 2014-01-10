@@ -4,6 +4,7 @@ namespace PhpProbe;
 
 use PhpProbe\Exception\ExitException;
 use PhpProbe\Helper\AdapterHelper;
+use PhpProbe\Helper\CheckHelper;
 use PhpProbe\Helper\CliHelper;
 use PhpProbe\Helper\HttpHelper;
 use PhpProbe\Helper\ProbeHelper;
@@ -187,6 +188,17 @@ class Manager
                 $adapterClass = AdapterHelper::getClassNameFromType($probe['adapter']);
                 $adapter      = new $adapterClass();
                 $probeInstance->setAdapter($adapter);
+            }
+            if (isset($probe['checkers'])) {
+                foreach ($probe['checkers'] as $checkerName => $checker) {
+                    $checkerClass = CheckHelper::getClassNameFromType(ucfirst($checkerName));
+                    $checkerInstance = new $checkerClass();
+                    foreach ($checker as $type => $param) {
+                        $checkerInstance->addCriterion($type, $param);
+                    }
+
+                    $probeInstance->addChecker($checkerInstance);
+                }
             }
 
             $this->addProbe($probeInstance);

@@ -32,51 +32,6 @@ class HttpProbe extends AbstractProbe implements ProbeInterface
     );
 
     /**
-     * {@inheritdoc}
-     */
-    public function check()
-    {
-        $this->checkConfiguration();
-
-        $this->adapter->check($this->options);
-        /** @var HttpAdapterResponse $response */
-        $response = $this->adapter->getResponse();
-
-        $this->checkValue('httpCode', $this->options['expectedHttpCode'], $response->getHttpCode());
-        if (isset($this->options['contains'])) {
-            $this->checkContent($this->options['contains'], $response->getContent());
-        }
-
-        if ($response->isSuccessful()) {
-            $this->succeeded();
-            return;
-        }
-
-        $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
-    }
-
-    /**
-     * Check content response's content
-     *
-     * @param string $expected
-     * @param string $actual
-     *
-     * @return void
-     */
-    protected function checkContent($expected, $actual)
-    {
-        if (!isset($expected)) {
-            return;
-        }
-
-        if (isset($expected) && !preg_match('#' . $expected . '#i', $actual)) {
-            $reason = sprintf("Expected content '%s' not found in response.", $expected);
-            echo $actual;
-            $this->failed($reason);
-        }
-    }
-
-    /**
      * Get probe's default adapter
      *
      * @return AdapterInterface

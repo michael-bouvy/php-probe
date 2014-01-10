@@ -34,30 +34,6 @@ class DatabaseProbe extends AbstractProbe implements ProbeInterface
     );
 
     /**
-     * {@inheritdoc}
-     */
-    public function check()
-    {
-        $this->checkConfiguration();
-
-        $this->adapter->check($this->options);
-        /** @var DatabaseAdapterResponse $response */
-        $response = $this->adapter->getResponse();
-
-        if (isset($this->options['database']) && $response->getDatabaseExists() !== true) {
-            $this->failed(sprintf("Database '%s' not found.", $this->options['database']));
-            return;
-        }
-
-        if ($response->isSuccessful()) {
-            $this->succeeded();
-            return;
-        }
-
-        $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
-    }
-
-    /**
      * @return AdapterInterface
      */
     public function getDefaultAdapter()

@@ -29,7 +29,7 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
         $curlHandler = curl_init();
 
         curl_setopt($curlHandler, CURLOPT_URL, $parameters['url']);
-        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, isset($parameters['contains']) ? 1 : 0);
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curlHandler, CURLOPT_HEADER, 0);
 
         ob_start();

@@ -3,6 +3,7 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Check\CheckInterface;
 
 /**
  * Interface ProbeInterface
@@ -73,6 +74,15 @@ interface ProbeInterface
      * @return void
      */
     public function checkConfiguration();
+
+    /**
+     * Add a checker object for this probe
+     *
+     * @param CheckInterface $check The checker
+     *
+     * @return $this
+     */
+    public function addChecker(CheckInterface $check);
 
     /**
      * Get the full array containing all expected/available options
