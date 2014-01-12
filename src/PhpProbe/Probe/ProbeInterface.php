@@ -4,6 +4,7 @@ namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Check\CheckInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Interface ProbeInterface
@@ -106,4 +107,13 @@ interface ProbeInterface
      * @return AdapterInterface
      */
     public function getAdapter();
+
+    /**
+     * Set a PSR-3 compliant logger
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger);
 }

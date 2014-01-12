@@ -7,6 +7,7 @@ use PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
 use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
 use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class AbstractProbe
@@ -55,6 +56,11 @@ abstract class AbstractProbe implements ProbeInterface
      * @var array Expected options array
      */
     protected $expectedOptions = array();
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @param string           $name
@@ -118,6 +124,11 @@ abstract class AbstractProbe implements ProbeInterface
         foreach ($this->checkers as $checker) {
             /** @var CheckInterface $checker */
             $checkerError = $checker->check($response);
+            if ($this->logger) {
+                foreach ($checkerError as $singleError) {
+                    $this->logger->log($checker->getLevel(), $singleError);
+                }
+            }
             $errors       = array_merge($errors, $checkerError);
         }
 
@@ -349,5 +360,13 @@ abstract class AbstractProbe implements ProbeInterface
     public function getAdapter()
     {
         return $this->adapter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

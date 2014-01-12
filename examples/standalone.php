@@ -20,12 +20,15 @@ $httpProbe
 $checkerHttps = new PhpProbe\Check\HttpCheck();
 $checkerHttps
     ->addCriterion('httpCode', \PhpProbe\Http\Codes::HTTP_NOT_FOUND)
-    ->addCriterion('content', 'G[o]+gle');
+    ->addCriterion('content', 'G[o]+ggle');
+
+$logger = new \Monolog\Logger('https');
 
 $httpsProbe = new PhpProbe\Probe\HttpProbe('Google_HTTPS', array(), new \PhpProbe\Adapter\PhpCurlAdapter());
 $httpsProbe
     ->url('https://www.google.com/')
-    ->addChecker($checkerHttps);
+    ->addChecker($checkerHttps)
+    ->setLogger($logger);
 
 
 $manager = new PhpProbe\Manager();
