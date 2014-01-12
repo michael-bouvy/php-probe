@@ -122,7 +122,7 @@ abstract class AbstractProbe implements ProbeInterface
         }
 
         if (count($errors)) {
-            $this->failed(implode($errors, "\n"));
+            $this->failed(implode("\n", $errors));
             return;
         }
 
