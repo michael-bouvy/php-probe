@@ -2,6 +2,7 @@
 
 namespace PhpProbe;
 
+use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ExitException;
 use PhpProbe\Helper\AdapterHelper;
 use PhpProbe\Helper\CheckHelper;
@@ -70,7 +71,9 @@ class Manager
                 throw new ExitException('Failure', 0);
             }
         }
+        // @codeCoverageIgnoreStart
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Output result of probes in plain text
@@ -177,7 +180,18 @@ class Manager
         }
 
         $parsedFile = $parsingLibrary::parse($fileName);
+        $this->importProbesFromParsedFile($parsedFile);
+    }
 
+    /**
+     * Import probes from the parsed content of a config file
+     *
+     * @param array $parsedFile Parsed content of config file
+     *
+     * @return void
+     */
+    public function importProbesFromParsedFile($parsedFile)
+    {
         foreach ($parsedFile['probes'] as $probeName => $probe) {
             $className = ProbeHelper::getClassNameFromType($probe['type']);
 
@@ -189,9 +203,11 @@ class Manager
                 $adapter      = new $adapterClass();
                 $probeInstance->setAdapter($adapter);
             }
+
             if (isset($probe['checkers'])) {
                 foreach ($probe['checkers'] as $checkerName => $checker) {
-                    $checkerClass = CheckHelper::getClassNameFromType(ucfirst($checkerName));
+                    $checkerClass    = CheckHelper::getClassNameFromType(ucfirst($checkerName));
+                    /** @var CheckInterface $checkerInstance */
                     $checkerInstance = new $checkerClass();
                     foreach ($checker as $type => $param) {
                         $checkerInstance->addCriterion($type, $param);

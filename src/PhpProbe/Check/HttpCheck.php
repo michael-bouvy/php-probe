@@ -2,6 +2,7 @@
 
 namespace PhpProbe\Check;
 
+use PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
 use \PhpProbe\Adapter\Reponse\HttpAdapterResponse;
 
 /**
@@ -29,7 +30,7 @@ class HttpCheck extends AbstractCheck
      * Check content response's content
      *
      * @param HttpAdapterResponse $response The response object
-     * @param strin               $search   Search criterion
+     * @param string              $search   Search criterion
      *
      * @return mixed
      */

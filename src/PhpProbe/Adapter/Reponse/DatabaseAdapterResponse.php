@@ -8,8 +8,8 @@ namespace PhpProbe\Adapter\Reponse;
  * Following properties can be defined for this response adapter :
  * - databaseExists
  *
- * @method void   setDatabaseExists()
- * @method string getDatabaseExists()
+ * @method void   setDatabases($databases)
+ * @method array  getDatabases()
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter\Reponse

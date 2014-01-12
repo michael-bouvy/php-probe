@@ -16,7 +16,7 @@ namespace PhpProbe\Adapter\Reponse;
  * @method void setResponseTime()
  * @method string getContent()
  * @method int getHttpCode()
- * @method int getResponseTime()
+ * @method double getResponseTime()
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter\Reponse

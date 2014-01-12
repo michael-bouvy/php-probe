@@ -5,6 +5,7 @@ namespace PhpProbe;
 use PhpProbe\Adapter\TestAdapter;
 use PhpProbe\Probe\ProbeInterface;
 use PhpProbe\Probe\TestProbe;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class ManagerTest
@@ -234,5 +235,20 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $this->setExpectedException('\RuntimeException');
         $manager->importConfig(__DIR__ . '/../assets/missing_config_file.yml');
+    }
+
+    /**
+     * @covers PhpProbe\Manager::importProbesFromParsedFile
+     */
+    public function testImportProbesFromParsedFile()
+    {
+        $parsedFile = Yaml::parse(__DIR__ . '/../assets/config_manager_with_adapter_and_checker.yml');
+        $manager = new Manager();
+        $manager->importProbesFromParsedFile($parsedFile);
+        $probes = $manager->getProbes();
+        $this->assertEquals(1, count($probes));
+        /* @var ProbeInterface $testProbe */
+        $testProbe = array_shift($probes);
+        $this->assertInstanceOf('PhpProbe\Adapter\TestAdapter', $testProbe->getAdapter());
     }
 }

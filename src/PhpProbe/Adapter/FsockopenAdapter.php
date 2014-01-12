@@ -10,6 +10,8 @@ use PhpProbe\Adapter\Reponse\TcpAdapterResponse;
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter
+ *
+ * @codeCoverageIgnore
  */
 class FsockopenAdapter extends AbstractAdapter implements AdapterInterface
 {
@@ -22,7 +24,10 @@ class FsockopenAdapter extends AbstractAdapter implements AdapterInterface
      */
     public function check(array $parameters)
     {
-        $res = fsockopen($parameters['host'], $parameters['port'], $errno, $errstr, $parameters['timeout']);
+        $timerStart = microtime();
+        $res        = fsockopen($parameters['host'], $parameters['port'], $errno, $errstr, $parameters['timeout']);
+        $timerEnd   = microtime();
+        $duration   = $timerEnd - $timerStart;
 
         $response = new TcpAdapterResponse();
 
@@ -31,6 +36,7 @@ class FsockopenAdapter extends AbstractAdapter implements AdapterInterface
             $response->setError($error);
             $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
         } else {
+            $response->setResponseTime($duration);
             $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
         }
 

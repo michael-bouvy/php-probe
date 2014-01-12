@@ -11,6 +11,8 @@ use PhpProbe\Helper\AdapterHelper;
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter
+ *
+ * @codeCoverageIgnore
  */
 class PhpMysqlAdapter extends AbstractAdapter implements AdapterInterface
 {
@@ -37,14 +39,19 @@ class PhpMysqlAdapter extends AbstractAdapter implements AdapterInterface
             $error = sprintf("Connection problem : %s", mysql_error());
             $response->setError($error);
             $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
+            $this->setResponse($response);
+            return $this;
         } else {
             $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
         }
 
-        if (isset($parameters['database']) && mysql_select_db($parameters['database'], $connection)) {
-            $response->setDatabaseExists(true);
+        $query = mysql_query('show databases', $connection);
+        $databases = array();
+        while ($row = mysql_fetch_assoc($query)) {
+            $databases[] = $row['Database'];
         }
 
+        $response->setDatabases($databases);
         $this->setResponse($response);
 
         return $this;

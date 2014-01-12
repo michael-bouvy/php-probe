@@ -15,13 +15,20 @@ class DatabaseCheck extends AbstractCheck
      * Check if a specific database exists
      *
      * @param DatabaseAdapterResponse $response
-     * @param string                  $database
+     * @param string|array            $database
      *
      * @return mixed
      */
     protected function checkDatabase(DatabaseAdapterResponse $response, $database)
     {
-        if ($response->getDatabaseExists() !== true) {
+        if (is_array($database)) {
+            $diff = array_diff($database, $response->getDatabases());
+            if (count($diff)) {
+                return sprintf("Databases '%s' not found.", implode(", ", $diff));
+            }
+        }
+
+        if (!is_array($database) && !in_array($database, $response->getDatabases())) {
             return sprintf("Database '%s' not found.", $database);
         }
 

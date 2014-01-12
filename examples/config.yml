@@ -6,7 +6,7 @@ probes:
       timeout: 5
     checkers:
       http:
-        HttpCode: 302
+        httpCode: 302
   Google.fr_HTTPS:
     type: Http
     options:
@@ -14,18 +14,25 @@ probes:
       timeout: 5
     checkers:
       http:
-        HttpCode: 200
-        Content: <title>Goorrgle</title>
+        httpCode: 200
+        content: <title>Goorrgle</title>
+      generic:
+        responseTime: 1
   Google_DNS:
     type: Tcp
     adapter: Netcat
     options:
       host: 8.8.8.8
       port: 53
+    checkers:
+      generic:
+        responseTime: 0.5
   MySQL_Local:
     type: Database
     options:
       host: localhost
       user: root
       password:
-      database: mysql
+    checkers:
+      database:
+        database: [test, mysql]

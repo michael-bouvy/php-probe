@@ -11,6 +11,8 @@ use Symfony\Component\Process\Process;
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter
+ *
+ * @codeCoverageIgnore
  */
 class NetcatAdapter extends AbstractAdapter implements AdapterInterface
 {
@@ -25,10 +27,13 @@ class NetcatAdapter extends AbstractAdapter implements AdapterInterface
     {
         $command = "nc -vz -w " . $parameters['timeout'] . " " . $parameters['host'] . " " . $parameters['port'];
 
-        $process = new Process($command);
+        $timerStart = microtime();
+        $process    = new Process($command);
         // Keep 2 seconds margin from request timeout
         $process->setTimeout($parameters['timeout'] + 2);
         $process->run();
+        $timerEnd = microtime();
+        $duration = $timerEnd - $timerStart;
 
         $response = new TcpAdapterResponse();
 
@@ -36,6 +41,7 @@ class NetcatAdapter extends AbstractAdapter implements AdapterInterface
             $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
             $response->setError(sprintf('%s', $process->getErrorOutput()));
         } else {
+            $response->setResponseTime($duration);
             $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
         }
 

@@ -11,6 +11,8 @@ use PhpProbe\Helper\AdapterHelper;
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter
+ *
+ * @codeCoverageIgnore
  */
 class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
 {
@@ -26,6 +28,7 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
     {
         AdapterHelper::checkPhpExtension('curl');
 
+        $timerStart  = microtime();
         $curlHandler = curl_init();
 
         curl_setopt($curlHandler, CURLOPT_URL, $parameters['url']);
@@ -37,6 +40,8 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
         $httpCode = curl_getinfo($curlHandler, CURLINFO_HTTP_CODE);
         curl_close($curlHandler);
         ob_end_clean();
+        $timerEnd = microtime();
+        $duration = $timerEnd - $timerStart;
 
         $response = new HttpAdapterResponse(
             array(
@@ -45,6 +50,7 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
             )
         );
         $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
+        $response->setResponseTime($duration);
         $this->setResponse($response);
 
         return $this;

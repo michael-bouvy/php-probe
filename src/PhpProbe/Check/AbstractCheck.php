@@ -3,6 +3,7 @@
 namespace PhpProbe\Check;
 
 use \PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
+use Psr\Log\LogLevel;
 
 /**
  * Class AbstractCheck
@@ -18,12 +19,28 @@ abstract class AbstractCheck implements CheckInterface
     protected $checkList = array();
 
     /**
-     * Add a criterion to this checker
-     *
-     * @param string $type
-     * @param mixed  $parameter
-     *
-     * @return $this
+     * @var string
+     */
+    protected $level = LogLevel::INFO;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function addCriterion($type, $parameter)
     {
@@ -38,9 +55,12 @@ abstract class AbstractCheck implements CheckInterface
     public function check(AbstractAdapterResponse $response)
     {
         $errors = array();
-        foreach ($this->checkList as $_item) {
-            $checkFunction = 'check'.$_item['type'];
-            $result = $this->$checkFunction($response, $_item['param']);
+        foreach ($this->checkList as $item) {
+            $checkFunction = 'check' . ucfirst($item['type']);
+            if (!method_exists($this, $checkFunction)) {
+                throw new \RuntimeException(sprintf("Method '%s' does not exist", $checkFunction));
+            }
+            $result = $this->{$checkFunction}($response, $item['param']);
             if ($result !== true) {
                 $errors[] = $result;
             }
@@ -52,9 +72,11 @@ abstract class AbstractCheck implements CheckInterface
     /**
      * Check a value based on it's expected and actual values
      *
-     * @param $name
-     * @param $expected
-     * @param $actual
+     * @param string $name
+     * @param mixed  $expected
+     * @param mixed  $actual
+     *
+     * @return bool|string
      */
     protected function checkValue($name, $expected, $actual)
     {

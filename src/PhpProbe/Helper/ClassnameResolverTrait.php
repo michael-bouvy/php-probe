@@ -21,7 +21,8 @@ trait ClassnameResolverTrait
     public static function getClassNameFromType($type)
     {
         $rootNamespace = substr(__NAMESPACE__, 0, strpos(__NAMESPACE__, "\\"));
-        $className     = "\\" . $rootNamespace . "\\" . static::OBJECT_TYPE . "\\" . $type . static::OBJECT_TYPE;
+        $className     = "\\" . $rootNamespace . "\\" . static::OBJECT_TYPE;
+        $className    .= "\\" . ucfirst($type) . static::OBJECT_TYPE;
         if (!class_exists($className)) {
             throw new \RuntimeException(sprintf("Class '%s' does not exist.", $className));
         }

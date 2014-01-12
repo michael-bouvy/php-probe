@@ -1,7 +1,8 @@
 <?php
 
-
 namespace PhpProbe\Adapter\Reponse;
+
+use PhpProbe\Exception\ConfigurationException;
 
 /**
  * Class AbstractAdapterResponse
@@ -90,6 +91,7 @@ class AbstractAdapterResponse implements AdapterResponseInterface
      * @param string $method
      * @param array  $arguments
      *
+     * @throws ConfigurationException
      * @return mixed
      */
     public function __call($method, $arguments)
@@ -106,7 +108,7 @@ class AbstractAdapterResponse implements AdapterResponseInterface
             $this->propertyBag[$propertyName] = $propertyValue;
         } else {
             if (!isset($this->propertyBag[$propertyName])) {
-                return null;
+                throw new ConfigurationException(sprintf("Response property '%s' not available.", $propertyName));
             }
             return $this->propertyBag[$propertyName];
         }

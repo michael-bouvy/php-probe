@@ -5,7 +5,7 @@ namespace PhpProbe\Helper;
 /**
  * Class ProbeHelper
  *
- * @author  Michael BOUVY <michael.bouvy@gmail.com>
+ * @author  Julien CHICHIGNOUD <julien.chichignoud@gmail.com>
  * @package PhpProbe\Helper
  */
 class CheckHelper

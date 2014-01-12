@@ -3,6 +3,8 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
+use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
 use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
 
@@ -15,9 +17,9 @@ use PhpProbe\Exception\ConfigurationException;
 abstract class AbstractProbe implements ProbeInterface
 {
     /**
-     * @var bool
+     * @var string
      */
-    protected $failure = false;
+    protected $status = ProbeInterface::STATUS_UNKNOWN;
 
     /**
      * @var bool
@@ -109,20 +111,24 @@ abstract class AbstractProbe implements ProbeInterface
 
         $errors = array();
         foreach ($this->checkers as $checker) {
-            $_errors = $checker->check($response);
-            $errors = array_merge($errors, $_errors);
+            /** @var CheckInterface $checker */
+            $checkerError = $checker->check($response);
+            $errors       = array_merge($errors, $checkerError);
         }
 
-        if (!empty($errors)) {
-            $this->failed(implode($errors, "\n"));
-        }
-
-        if ($response->isSuccessful()) {
+        if ($response->isSuccessful() && !count($errors)) {
             $this->succeeded();
             return;
         }
 
-        $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
+        if (count($errors)) {
+            $this->failed(implode($errors, "\n"));
+            return;
+        }
+
+        if ($response->getStatus() == AdapterResponseInterface::STATUS_UNKNOWN) {
+            $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
+        }
     }
 
     /**
@@ -164,8 +170,8 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function failed($reason)
     {
-        $this->error   = $reason;
-        $this->failure = true;
+        $this->error  = $reason;
+        $this->status = ProbeInterface::STATUS_FAILED;
     }
 
     /**
@@ -175,7 +181,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function hasFailed()
     {
-        return $this->failure;
+        return ($this->status == ProbeInterface::STATUS_FAILED);
     }
 
     /**
@@ -185,7 +191,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function hasSucceeded()
     {
-        return $this->success;
+        return ($this->status == ProbeInterface::STATUS_SUCCESS);
     }
 
     /**
@@ -195,7 +201,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function succeeded()
     {
-        $this->success = true;
+        $this->status  = ProbeInterface::STATUS_SUCCESS;
     }
 
     /**
@@ -334,27 +340,5 @@ abstract class AbstractProbe implements ProbeInterface
     public function getAdapter()
     {
         return $this->adapter;
-    }
-
-    /**
-     * Check a value based on it's expected and actual values
-     *
-     * @param $name
-     * @param $expected
-     * @param $actual
-     */
-    protected function checkValue($name, $expected, $actual)
-    {
-        if (isset($expected) && $expected != $actual) {
-            $reason = sprintf(
-                "Epected value '%s' for '%s', got '%s'",
-                $expected,
-                $name,
-                $actual
-            );
-
-            $this->failed($reason);
-            return;
-        }
     }
 }

@@ -14,6 +14,9 @@ use PhpProbe\Check\CheckInterface;
 interface ProbeInterface
 {
     const NO_REASON_FAIL_MESSAGE = 'Failed with no reason ...';
+    const STATUS_SUCCESS         = 'success';
+    const STATUS_FAILED          = 'failed';
+    const STATUS_UNKNOWN         = 'unknown';
 
     /**
      * @param string           $name    Probe name

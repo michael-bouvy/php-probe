@@ -4,7 +4,6 @@ namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Adapter\FsockopenAdapter;
-use PhpProbe\Adapter\Reponse\TcpAdapterResponse;
 
 /**
  * Class TcpProbe

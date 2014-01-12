@@ -3,70 +3,45 @@ PhpProbe [![Build Status](https://travis-ci.org/michael-bouvy/php-probe.png?bran
 
 PhpProbe is a PHP library allowing to simply probe/monitor any applications and services, and either print results or use them in code.
 
-Installation
+Core concepts
 -----------
 
-####Using Composer
-
-Just require the PhpProbe library in your `composer.json` : 
-
-```json
-{
-    "require": {
-        "php-probe/php-probe": "dev-master"
-    }
-}
-```
-
-####From sources
-
-Clone the repository in your project :
-
-```bash
- $ git clone https://github.com/michael-bouvy/php-probe
-```
-
-You can use the provided autoloader :
-
-```php
-require __DIR__ . "/src/PhpProbe/Autoloader.php";
-\PhpProbe\Autoloader::register();
-```
-
-If you already use a custom (non PSR-0 compliant) autoloader, you might want to prepend PhpProbe's autoloader to autoloaders stack. Simply pass `true` as argument to the `register()` method :
-
-```php
-\PhpProbe\Autoloader::register(true);
-```
+A `Probe` (eg. Tcp, Http, Database) relies on a (compatible) `Adapter` (eg. Netcat, PhpCurl, PhpMysql), which will return an `AdapterResponse`, possibly containing data to test/check.
+At this point a `Probe` is considered successful if it could run successfuly (eq. TCP connection established).
+You can also add one or more `Check` to check for specific conditions (eg. response time below a given value, HTTP response code ...).
 
 Usage
 -----------
 
-There are 2 ways this library can be used : 
+There are 2 ways this library can be used:
 
 ####Standalone mode
 
 ```php
 <?php
-require __DIR__ . "/vendor/autoload.php";
+require __DIR__ . "/../vendor/autoload.php";
 
-$tcpProbe = new PhpProbe\Probe\TcpProbe('Google_DNS', array(), new \PhpProbe\Adapter\Fsockopen());
+/* TCP Probe */
+$tcpProbe = new PhpProbe\Probe\TcpProbe('Google_DNS', array(), new \PhpProbe\Adapter\NetcatAdapter());
 $tcpProbe->host('8.8.8.8')->port(53);
 
-$httpProbe = new PhpProbe\Probe\HttpProbe('Google_HTTP', array(), new \PhpProbe\Adapter\PhpCurl());
-$httpProbe->url('http://www.google.com/')->expectedHttpCode(\PhpProbe\Http\Codes::HTTP_FOUND);
+/* HTTPS Probe */
+$checkerHttps = new PhpProbe\Check\HttpCheck();
+$checkerHttps
+    ->addCriterion('httpCode', \PhpProbe\Http\Codes::HTTP_NOT_FOUND)
+    ->addCriterion('content', 'G[o]+gle');
 
-$httpsProbe = new PhpProbe\Probe\HttpProbe('Google_HTTPS', array(), new \PhpProbe\Adapter\PhpCurl());
-$httpsProbe->url('https://www.google.com/')->expectedHttpCode(\PhpProbe\Http\Codes::HTTP_FOUND);
+$httpsProbe = new PhpProbe\Probe\HttpProbe('Google_HTTPS', array(), new \PhpProbe\Adapter\PhpCurlAdapter());
+$httpsProbe
+    ->url('https://www.google.com/')
+    ->addChecker($checkerHttps);
+
 
 $manager = new PhpProbe\Manager();
 $manager
     ->addProbe($tcpProbe)
-    ->addProbe($httpProbe)
     ->addProbe($httpsProbe)
-    ->checkAll()
-    ->outputHtml(true)
-    ->end();
+    ->checkAll();
 ```
 
 See `examples/standalone.php`
@@ -94,7 +69,7 @@ See `examples/framework.php`
 
 ***
 
-No matter which way you use this library, you can load the probes from a YAML config file, like this example :
+No matter which way you use this library, you can load the probes from a YAML config file, like this example:
 
 ```yaml
 probes:
@@ -102,51 +77,123 @@ probes:
     type: Http
     options:
       url: http://www.google.com
-      expectedHttpCode: 302
       timeout: 5
+    checkers:
+      http:
+        httpCode: 302
   Google.fr_HTTPS:
     type: Http
     options:
       url: https://www.google.fr
-      expectedHttpCode: 200
       timeout: 5
-      contains: <title>Google</title>
+    checkers:
+      http:
+        httpCode: 200
+        content: <title>Goorrgle</title>
+      generic:
+        responseTime: 1
   Google_DNS:
     type: Tcp
+    adapter: Netcat
     options:
       host: 8.8.8.8
       port: 53
+    checkers:
+      generic:
+        responseTime: 0.5
+  MySQL_Local:
+    type: Database
+    options:
+      host: localhost
+      user: root
+      password:
+    checkers:
+      database:
+        database: [test, mysql]
 ```
 
 See `examples/config.yml`
 
-Then simply load the config file in your code :
+Then simply load the config file in your code:
 
 ```php
 $manager = new PhpProbe\Manager();
-$manager->importConfig('config_sample.yml');
+$manager->importConfig('my_config.yml');
 $manager->checkAll();
 ```
 
 See `examples/standalone_config.php`
 
-Available probes & adapters
+Available probes, adapters & checkers
 -----------
 
-Probes rely on adapters : for instance `TcpProbe` can either work with PHP's `fsockopen()` function, or locally installed Unix utility `netcat`.
+Probes rely on adapters: for instance `TcpProbe` can either work with PHP's `fsockopen()` function, or locally installed Unix utility `netcat`.
 
 ####Probes
 * `TcpProbe`
  * `FsockopenAdapter` (uses PHP's `fsockopen()` function)
  * `NetcatAdapter` (uses `netcat` utility)
-* `HttpProbe` : check for HTTP response code or response content
+* `HttpProbe`: check for HTTP response code or response content
  * `PhpCurlAdapter` (uses PHP's curl extension)
-* `DatabaseProbe` : check for database connection or existing database
+* `DatabaseProbe`: check for database connection or existing database
  * `PhpMysqlAdapter` (uses PHP's mysql extension)
-* `TestProbe` : for testing purposes
+* `TestProbe`: for testing purposes
  * `TestAdapter`
 
 A `NullAdapter` is also available, always succeeding.
+
+These probes can be used with one or more of the following checkers:
+
+###Checkers and their criterions
+* `HttpCheck`:
+ * `httpCode`: self-explanatory
+ * `content`: check for a given value in the reponse content (also works with regular expressions)
+* `DatabaseCheck`:
+ * `database`: check for one (or multiple) existing database(s)
+* `GenericCheck`:
+ * `responseTime`: check if probe's response time is below the given value
+* `TestCheck`: for testing purposes
+
+Installation
+-----------
+
+####Using Composer
+
+Just require the PhpProbe library in your `composer.json`:
+
+```json
+{
+    "require": {
+        "php-probe/php-probe": "dev-master"
+    }
+}
+```
+
+####From sources
+
+Clone the repository in your project:
+
+```bash
+$ git clone https://github.com/michael-bouvy/php-probe
+```
+
+You can use the provided autoloader:
+
+```php
+require __DIR__ . "/src/PhpProbe/Autoloader.php";
+\PhpProbe\Autoloader::register();
+```
+
+If you already use a custom (non PSR-0 compliant) autoloader, you might want to prepend PhpProbe's autoloader to autoloaders stack. Simply pass `true` as argument to the `register()` method:
+
+```php
+\PhpProbe\Autoloader::register(true);
+```
+
+Contributors
+-----------
+
+Special thanks to Julien CHICHIGNOUD (@juchi) for his Checkers concept and implementation.
 
 Testing
 -----------
@@ -154,8 +201,8 @@ Testing
 To run the test suite, you need [composer](http://getcomposer.org).
 
 ```bash
- $ php composer.phar install --dev
- $ vendor/bin/phpunit
+$ php composer.phar install --dev
+$ vendor/bin/phpunit
 ```
 
 License
