@@ -73,29 +73,22 @@ class Manager
         }
         // @codeCoverageIgnoreStart
     }
+
     // @codeCoverageIgnoreEnd
 
     /**
      * Output result of probes in plain text
      *
-     * @param bool $includeSuccess Include success messages in output or not
-     * @param bool $httpHeader     Send HTTP headers
+     * @param bool   $includeSuccess Include success messages in output or not
+     * @param bool   $httpHeader     Send HTTP headers
+     * @param string $template       Template filename
      *
      * @return $this
      */
-    public function outputText($includeSuccess = false, $httpHeader = true)
+    public function outputText($includeSuccess = false, $httpHeader = true, $template = '')
     {
-        $output = '';
-        foreach ($this->probes as $probe) {
-            if ($probe->hasFailed()) {
-                $output .= "# " . $probe->getName() . " - Failure (";
-                $output .= implode(" - ", $probe->getErrorMessages());
-                $output .= ")\n";
-            } else {
-                if ($includeSuccess === true) {
-                    $output .= "# " . $probe->getName() . " - Success\n";
-                }
-            }
+        if (empty($template) || !file_exists($template)) {
+            $template = __DIR__ . '/Assets/Templates/output-text.php';
         }
 
         if ($httpHeader === true && $this->hasFailures()) {
@@ -104,7 +97,8 @@ class Manager
             HttpHelper::setSuccessHttpHeader();
         }
 
-        print $output;
+        $probes = $this->probes;
+        require $template;
 
         return $this;
     }
@@ -112,26 +106,17 @@ class Manager
     /**
      * Output result of probes in plain text
      *
-     * @param bool $includeSuccess Include success messages in output or not
-     * @param bool $httpHeader     Send HTTP headers
+     * @param bool   $includeSuccess Include success messages in output or not
+     * @param bool   $httpHeader     Send HTTP headers
+     * @param string $template       Template filename
      *
      * @return $this
      */
-    public function outputHtml($includeSuccess = false, $httpHeader = true)
+    public function outputHtml($includeSuccess = false, $httpHeader = true, $template = '')
     {
-        $htmlOutput = '<ul>';
-        foreach ($this->probes as $probe) {
-            if ($probe->hasFailed()) {
-                $htmlOutput .= '<li>' . $probe->getName() . ' - Failure (';
-                $htmlOutput .= implode(" - ", $probe->getErrorMessages());
-                $htmlOutput .= ') </li>';
-            } else {
-                if ($includeSuccess === true) {
-                    $htmlOutput .= '<li>' . $probe->getName() . ' - Success</li>';
-                }
-            }
+        if (empty($template) || !file_exists($template)) {
+            $template = __DIR__ . '/Assets/Templates/output-html.php';
         }
-        $htmlOutput .= '</ul>';
 
         if ($httpHeader === true && $this->hasFailures()) {
             HttpHelper::setFailHttpHeader();
@@ -139,7 +124,8 @@ class Manager
             HttpHelper::setSuccessHttpHeader();
         }
 
-        print $htmlOutput;
+        $probes = $this->probes;
+        require $template;
 
         return $this;
     }
@@ -210,7 +196,7 @@ class Manager
 
             if (isset($probe['checkers'])) {
                 foreach ($probe['checkers'] as $checkerName => $checker) {
-                    $checkerClass    = CheckHelper::getClassNameFromType(ucfirst($checkerName));
+                    $checkerClass = CheckHelper::getClassNameFromType(ucfirst($checkerName));
                     /** @var CheckInterface $checkerInstance */
                     $checkerInstance = new $checkerClass();
                     foreach ($checker as $type => $param) {
