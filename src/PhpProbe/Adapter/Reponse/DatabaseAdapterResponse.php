@@ -6,7 +6,7 @@ namespace PhpProbe\Adapter\Reponse;
  * Class DatabaseAdapterResponse
  *
  * Following properties can be defined for this response adapter :
- * - databaseExists
+ * - databases : array containing all available databases
  *
  * @method void   setDatabases($databases)
  * @method array  getDatabases()
