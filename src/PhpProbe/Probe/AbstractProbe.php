@@ -81,7 +81,7 @@ abstract class AbstractProbe implements ProbeInterface
      *
      * @return $this
      */
-    public function configure(array $options)
+    public function configure(array $options = array())
     {
         foreach ($this->getExpectedOptions() as $expectedOption) {
             if (isset($expectedOption['name'])
