@@ -8,7 +8,6 @@ use PhpProbe\Exception\ConfigurationException;
  * Class AbstractAdapterResponse
  *
  * @method void   setError()
- * @method string getError()
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter\Reponse
@@ -39,14 +38,7 @@ class AbstractAdapterResponse implements AdapterResponseInterface
     }
 
     /**
-     * Set response's status
-     *
-     * Might be one of :
-     * - AdapterResponseInterface::STATUS_SUCCESSFUL
-     * - AdapterResponseInterface::STATUS_FAILED
-     * - AdapterResponseInterface::STATUS_UNKNOWN
-     *
-     * @param string $status
+     * {@inheritdoc}
      */
     public function setStatus($status)
     {
@@ -65,11 +57,7 @@ class AbstractAdapterResponse implements AdapterResponseInterface
     }
 
     /**
-     * Get response's status
-     *
-     * @see setStatus()
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getStatus()
     {
@@ -82,6 +70,14 @@ class AbstractAdapterResponse implements AdapterResponseInterface
     public function isSuccessful()
     {
         return (isset($this->status) && $this->status == AdapterResponseInterface::STATUS_SUCCESSFUL);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFailure()
+    {
+        return (isset($this->status) && $this->status == AdapterResponseInterface::STATUS_FAILED);
     }
 
     /**
@@ -101,7 +97,7 @@ class AbstractAdapterResponse implements AdapterResponseInterface
             return null;
         }
 
-        $propertyName = substr($method, 3);
+        $propertyName = lcfirst(substr($method, 3));
 
         if ($action == 'set') {
             $propertyValue                    = array_shift($arguments);
@@ -113,5 +109,18 @@ class AbstractAdapterResponse implements AdapterResponseInterface
             return $this->propertyBag[$propertyName];
         }
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getError()
+    {
+        if (isset($this->propertyBag['error'])) {
+            return str_replace("\n", " - ", $this->propertyBag['error']);
+        }
+        return '';
     }
 }

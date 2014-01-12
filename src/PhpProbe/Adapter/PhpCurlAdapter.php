@@ -49,8 +49,14 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
                 'httpCode' => $httpCode
             )
         );
-        $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
-        $response->setResponseTime($duration);
+
+        if ($content === false) {
+            $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
+            $response->setError(sprintf("Unable to reach URL '%s'", $parameters['url']));
+        } else {
+            $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
+            $response->setResponseTime($duration);
+        }
         $this->setResponse($response);
 
         return $this;

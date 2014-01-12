@@ -68,6 +68,7 @@ class TcpProbeTest extends \PHPUnit_Framework_TestCase
     {
         $adapterResponse = new TestAdapterResponse();
         $adapterResponse->setStatus(AdapterResponseInterface::STATUS_FAILED);
+        $adapterResponse->setError('Test Adapter Error message');
 
         $adapterMock  = $this->getMock('PhpProbe\Adapter\TestAdapter', array('getResponse'));
         $adapterMock->expects($this->once())
@@ -86,7 +87,6 @@ class TcpProbeTest extends \PHPUnit_Framework_TestCase
         $probe->setAdapter($adapterMock);
         $probe->check();
         $this->assertFalse($probe->hasSucceeded());
-//        $this->assertEquals($errorMessage, $probe->getErrorMessage());
     }
 
     /**

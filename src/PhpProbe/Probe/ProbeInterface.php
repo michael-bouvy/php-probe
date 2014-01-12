@@ -48,9 +48,9 @@ interface ProbeInterface
     public function hasSucceeded();
 
     /**
-     * @return string
+     * @return array
      */
-    public function getErrorMessage();
+    public function getErrorMessages();
 
     /**
      * Get a unique hash for probe to identify it

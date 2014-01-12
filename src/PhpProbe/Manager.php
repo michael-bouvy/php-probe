@@ -88,7 +88,9 @@ class Manager
         $output = '';
         foreach ($this->probes as $probe) {
             if ($probe->hasFailed()) {
-                $output .= "# " . $probe->getName() . " - Failure (" . $probe->getErrorMessage() . ")\n";
+                $output .= "# " . $probe->getName() . " - Failure (";
+                $output .= implode(" - ", $probe->getErrorMessages());
+                $output .= ")\n";
             } else {
                 if ($includeSuccess === true) {
                     $output .= "# " . $probe->getName() . " - Success\n";
@@ -120,7 +122,9 @@ class Manager
         $htmlOutput = '<ul>';
         foreach ($this->probes as $probe) {
             if ($probe->hasFailed()) {
-                $htmlOutput .= '<li>' . $probe->getName() . ' - Failure (' . $probe->getErrorMessage() . ') </li>';
+                $htmlOutput .= '<li>' . $probe->getName() . ' - Failure (';
+                $htmlOutput .= implode(" - ", $probe->getErrorMessages());
+                $htmlOutput .= ') </li>';
             } else {
                 if ($includeSuccess === true) {
                     $htmlOutput .= '<li>' . $probe->getName() . ' - Success</li>';
