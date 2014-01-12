@@ -27,9 +27,9 @@ abstract class AbstractProbe implements ProbeInterface
     protected $success = false;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $error;
+    protected $error = array();
 
     /**
      * @var string Probe's name
@@ -109,6 +109,11 @@ abstract class AbstractProbe implements ProbeInterface
         /** @var AbstractAdapterResponse $response */
         $response = $this->adapter->getResponse();
 
+        if ($response->isFailure()) {
+            $this->failed($response->getError());
+            return;
+        }
+
         $errors = array();
         foreach ($this->checkers as $checker) {
             /** @var CheckInterface $checker */
@@ -122,7 +127,7 @@ abstract class AbstractProbe implements ProbeInterface
         }
 
         if (count($errors)) {
-            $this->failed(implode("\n", $errors));
+            $this->failed($errors);
             return;
         }
 
@@ -170,7 +175,11 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function failed($reason)
     {
-        $this->error  = $reason;
+        if (is_array($reason)) {
+            $this->error = array_merge($this->error, $reason);
+        } else {
+            $this->error[] = $reason;
+        }
         $this->status = ProbeInterface::STATUS_FAILED;
     }
 
@@ -201,15 +210,15 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function succeeded()
     {
-        $this->status  = ProbeInterface::STATUS_SUCCESS;
+        $this->status = ProbeInterface::STATUS_SUCCESS;
     }
 
     /**
      * Get error message if probe has failed
      *
-     * @return string
+     * @return array
      */
-    public function getErrorMessage()
+    public function getErrorMessages()
     {
         return $this->error;
     }

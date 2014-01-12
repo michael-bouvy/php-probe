@@ -80,11 +80,11 @@ class TestProbe extends AbstractProbe implements ProbeInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getErrorMessage()
+    public function getErrorMessages()
     {
-        return 'Error';
+        return array('Test Probe first error message', 'Test Probe second error message');
     }
 
     /**

@@ -22,4 +22,32 @@ interface AdapterResponseInterface
      * @return bool
      */
     public function isSuccessful();
+
+    /**
+     * Set response's status
+     *
+     * Might be one of :
+     * - AdapterResponseInterface::STATUS_SUCCESSFUL
+     * - AdapterResponseInterface::STATUS_FAILED
+     * - AdapterResponseInterface::STATUS_UNKNOWN
+     *
+     * @param string $status
+     */
+    public function setStatus($status);
+
+    /**
+     * Get response's status
+     *
+     * @see setStatus()
+     *
+     * @return string
+     */
+    public function getStatus();
+
+    /**
+     * Get the main error message
+     *
+     * @return string
+     */
+    public function getError();
 }
