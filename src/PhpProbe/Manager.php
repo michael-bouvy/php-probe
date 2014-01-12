@@ -31,6 +31,19 @@ class Manager
     public $failCount = 0;
 
     /**
+     * @var string Template filename/path
+     */
+    protected $template = 'Assets/Templates/output-text.php';
+
+    /**
+     * @param string $template
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -77,18 +90,24 @@ class Manager
     // @codeCoverageIgnoreEnd
 
     /**
-     * Output result of probes in plain text
+     * Output result of probes using specified template
      *
      * @param bool   $includeSuccess Include success messages in output or not
      * @param bool   $httpHeader     Send HTTP headers
-     * @param string $template       Template filename
+     * @param string $template       Template file path
      *
      * @return $this
      */
-    public function outputText($includeSuccess = false, $httpHeader = true, $template = '')
+    public function output($includeSuccess = false, $httpHeader = true, $template = '')
     {
-        if (empty($template) || !file_exists($template)) {
-            $template = __DIR__ . '/Assets/Templates/output-text.php';
+        if (!empty($template) && file_exists(__DIR__ . '/' . $template)) {
+            $template = __DIR__ . '/' . $template;
+        } elseif (empty($template) || (!file_exists($template) && !file_exists(__DIR__ . '/' . $template))) {
+            if (file_exists($this->template)) {
+                $template = $this->template;
+            } else {
+                $template = __DIR__ . '/' . $this->template;
+            }
         }
 
         if ($httpHeader === true && $this->hasFailures()) {
@@ -104,7 +123,9 @@ class Manager
     }
 
     /**
-     * Output result of probes in plain text
+     * Output result of probes in HTML
+     *
+     * @deprecated
      *
      * @param bool   $includeSuccess Include success messages in output or not
      * @param bool   $httpHeader     Send HTTP headers
@@ -117,16 +138,27 @@ class Manager
         if (empty($template) || !file_exists($template)) {
             $template = __DIR__ . '/Assets/Templates/output-html.php';
         }
+        $this->output($includeSuccess, $httpHeader, $template);
+        return $this;
+    }
 
-        if ($httpHeader === true && $this->hasFailures()) {
-            HttpHelper::setFailHttpHeader();
-        } elseif ($httpHeader === true && !$this->hasFailures()) {
-            HttpHelper::setSuccessHttpHeader();
+    /**
+     * Output result of probes in plain text
+     *
+     * @deprecated
+     *
+     * @param bool   $includeSuccess Include success messages in output or not
+     * @param bool   $httpHeader     Send HTTP headers
+     * @param string $template       Template filename
+     *
+     * @return $this
+     */
+    public function outputText($includeSuccess = false, $httpHeader = true, $template = '')
+    {
+        if (empty($template) || !file_exists($template)) {
+            $template = __DIR__ . '/Assets/Templates/output-text.php';
         }
-
-        $probes = $this->probes;
-        require $template;
-
+        $this->output($includeSuccess, $httpHeader, $template);
         return $this;
     }
 
@@ -170,6 +202,17 @@ class Manager
         }
 
         $parsedFile = $parsingLibrary::parse($fileName);
+        if (isset($parsedFile['config']) && count($parsedFile['config'])) {
+            if (isset($parsedFile['config']['template'])
+                && file_exists($parsedFile['config']['template'])
+            ) {
+                $this->setTemplate($parsedFile['config']['template']);
+            } elseif (isset($parsedFile['config']['template'])
+                && file_exists(__DIR__ . '/' . $parsedFile['config']['template'])
+            ) {
+                $this->setTemplate(__DIR__ . '/' . $parsedFile['config']['template']);
+            }
+        }
         $this->importProbesFromParsedFile($parsedFile);
     }
 

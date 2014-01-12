@@ -37,10 +37,10 @@ $manager
 
 if (php_sapi_name() == 'cli') {
     $manager
-        ->outputText(true)
+        ->output(true)
         ->end();
 } else {
     $manager
-        ->outputHtml(true)
+        ->output(true, true, 'Assets/Templates/output-html.php')
         ->end();
 }

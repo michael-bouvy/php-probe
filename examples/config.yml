@@ -1,3 +1,5 @@
+config:
+  template: Assets/Templates/output-text.php
 probes:
   Google.com_HTTP:
     type: Http
