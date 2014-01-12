@@ -31,13 +31,12 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
         $timerStart  = microtime();
         $curlHandler = curl_init();
 
-        curl_setopt($curlHandler, CURLOPT_URL, $parameters['url']);
-        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curlHandler, CURLOPT_HEADER, 0);
+        $this->setHttpHeaders($curlHandler, $parameters);
 
         ob_start();
-        $content  = curl_exec($curlHandler);
-        $httpCode = curl_getinfo($curlHandler, CURLINFO_HTTP_CODE);
+        $content   = curl_exec($curlHandler);
+        $httpCode  = curl_getinfo($curlHandler, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($curlHandler);
         curl_close($curlHandler);
         ob_end_clean();
         $timerEnd = microtime();
@@ -52,7 +51,7 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
 
         if ($content === false) {
             $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
-            $response->setError(sprintf("Unable to reach URL '%s'", $parameters['url']));
+            $response->setError(sprintf("%s", $curlError));
         } else {
             $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
             $response->setResponseTime($duration);
@@ -60,5 +59,21 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
         $this->setResponse($response);
 
         return $this;
+    }
+
+    /**
+     * @param resource $curlHandler cURL handler
+     * @param array    $parameters
+     */
+    protected function setHttpHeaders($curlHandler, array $parameters)
+    {
+        curl_setopt($curlHandler, CURLOPT_URL, $parameters['url']);
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlHandler, CURLOPT_HEADER, 0);
+        curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $parameters['headers']);
+        if ($parameters['insecure']) {
+            curl_setopt($curlHandler, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curlHandler, CURLOPT_SSL_VERIFYPEER, false);
+        }
     }
 }
