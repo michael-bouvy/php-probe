@@ -16,6 +16,8 @@ At this point a `Probe` is considered successful if it could run successfuly (eq
 
 You can also add one or more `Check` to check for specific conditions (eg. response time below a given value, HTTP response code ...).
 
+Any PSR-3 compliant logger can also be attached to a `Probe`,(as [Monolog](https://github.com/Seldaek/monolog)), to be warned any error happening, by email for example. Monolog is shipped with several handlers that will certainly fit your needs. Each `Check` can have a defined log level, and therefore be handled by specific handlers.
+
 Usage
 -----------
 
