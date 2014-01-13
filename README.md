@@ -156,23 +156,23 @@ Probes rely on adapters: for instance `TcpProbe` can either work with PHP's `fso
  * `FsockopenAdapter` (uses PHP's `fsockopen()` function)
  * `NetcatAdapter` (uses `netcat` utility)
  * Probe options:
-  * `host`: hostname or IP without protocol (eg. `1.2.3.4`)
-  * `port`: self-explanatory
-  * `timeout`: request timeout in seconds
+    * `host`: hostname or IP without protocol (eg. `1.2.3.4`)
+    * `port`: self-explanatory
+    * `timeout`: request timeout in seconds
 * `HttpProbe`: check for HTTP response code or response content
  * `PhpCurlAdapter` (uses PHP's curl extension)
  * Probe options:
-  * `url`: URL to check, including protocol (eg. `http://www.mysite.com/mypage.php`)
-  * `timeout`: request timeout in seconds
-  * `headers`: an array of HTTP headers to send (eg. `['Cache-control: no-cache', 'Cookie: key=value']`)
+    * `url`: URL to check, including protocol (eg. `http://www.mysite.com/mypage.php`)
+    * `timeout`: request timeout in seconds
+    * `headers`: an array of HTTP headers to send (eg. `['Cache-control: no-cache', 'Cookie: key=value']`)
 * `DatabaseProbe`: check for database connection or existing database
  * `PhpMysqlAdapter` (uses PHP's mysql extension)
  * Probe options:
-  * `host`: hostname or IP without protocol (eg. `1.2.3.4`)
-  * `database`: database name (not used by `PhpMysqlAdapter` (see checker below), will be necessary for future PostgreSQL adapter)
-  * `user`: username
-  * `password`: password, may be empty
-  * `timeout`: connection timeout, not used yet
+    * `host`: hostname or IP without protocol (eg. `1.2.3.4`)
+    * `database`: database name (not used by `PhpMysqlAdapter` (see checker below), will be necessary for future PostgreSQL adapter)
+    * `user`: username
+    * `password`: password, may be empty
+    * `timeout`: connection timeout, not used yet
 
 * `TestProbe`: for testing purposes
  * `TestAdapter`
