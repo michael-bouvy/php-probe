@@ -116,4 +116,20 @@ interface ProbeInterface
      * @return void
      */
     public function setLogger(LoggerInterface $logger);
+
+    /**
+     * Set PSR-3 compliant priority level (eg. for notifications, display ...) for checker
+     *
+     * @param string $level
+     *
+     * @return mixed
+     */
+    public function setLevel($level);
+
+    /**
+     * Get PSR-3 compliant priority level of checker
+     *
+     * @return string
+     */
+    public function getLevel();
 }

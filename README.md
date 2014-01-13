@@ -3,11 +3,17 @@ PhpProbe [![Build Status](https://travis-ci.org/michael-bouvy/php-probe.png?bran
 
 PhpProbe is a PHP library allowing to simply probe/monitor any applications and services, and either print results or use them in code.
 
+This library (especially because it's _only_ a library) has no
+
+Also, PhpProbe respects PSR-0/1/2 and PSR-3, meaning (among others) it can be used with any [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md) compliant logger (see `setLogger()` on `Probe`s) like [Monolog](https://github.com/Seldaek/monolog).
+
 Core concepts
 -----------
 
 A `Probe` (eg. Tcp, Http, Database) relies on a (compatible) `Adapter` (eg. Netcat, PhpCurl, PhpMysql), which will return an `AdapterResponse`, possibly containing data to test/check.
+
 At this point a `Probe` is considered successful if it could run successfuly (eq. TCP connection established).
+
 You can also add one or more `Check` to check for specific conditions (eg. response time below a given value, HTTP response code ...).
 
 Usage
@@ -21,6 +27,8 @@ There are 2 ways this library can be used:
 <?php
 require __DIR__ . "/../vendor/autoload.php";
 
+error_reporting(E_ERROR | E_RECOVERABLE_ERROR);
+
 /* TCP Probe */
 $tcpProbe = new PhpProbe\Probe\TcpProbe('Google_DNS', array(), new \PhpProbe\Adapter\NetcatAdapter());
 $tcpProbe->host('8.8.8.8')->port(53);
@@ -29,13 +37,15 @@ $tcpProbe->host('8.8.8.8')->port(53);
 $checkerHttps = new PhpProbe\Check\HttpCheck();
 $checkerHttps
     ->addCriterion('httpCode', \PhpProbe\Http\Codes::HTTP_NOT_FOUND)
-    ->addCriterion('content', 'G[o]+gle');
+    ->addCriterion('content', 'G[o]+ggle');
+
+$logger = new \Monolog\Logger('PhpProbe');
 
 $httpsProbe = new PhpProbe\Probe\HttpProbe('Google_HTTPS', array(), new \PhpProbe\Adapter\PhpCurlAdapter());
 $httpsProbe
     ->url('https://www.google.com/')
-    ->addChecker($checkerHttps);
-
+    ->addChecker($checkerHttps)
+    ->setLogger($logger);
 
 $manager = new PhpProbe\Manager();
 $manager
@@ -45,6 +55,13 @@ $manager
 ```
 
 See `examples/standalone.php`
+
+Calling `$manager->output(true)` will print results (including success) that will look like this :
+
+```
+# Google_DNS - Success
+# Google_HTTPS - Failure (Expected value '404' for 'httpCode', got '302' - Expected content 'G[o]+ggle' not found in response.)
+```
 
 ####Inside a framework/tool
 
@@ -193,7 +210,7 @@ If you already use a custom (non PSR-0 compliant) autoloader, you might want to 
 Contributors
 -----------
 
-Special thanks to Julien CHICHIGNOUD (@juchi) for his Checkers concept and implementation.
+Special thanks to Julien CHICHIGNOUD ([@juchi](https://github.com/juchi/)) for his Checkers concept and implementation.
 
 Testing
 -----------

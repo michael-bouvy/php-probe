@@ -7,22 +7,13 @@ error_reporting(E_ERROR | E_RECOVERABLE_ERROR);
 $tcpProbe = new PhpProbe\Probe\TcpProbe('Google_DNS', array(), new \PhpProbe\Adapter\NetcatAdapter());
 $tcpProbe->host('8.8.8.8')->port(53);
 
-/* HTTP Probe */
-$checkerHttp = new PhpProbe\Check\HttpCheck();
-$checkerHttp->addCriterion('httpCode', \PhpProbe\Http\Codes::HTTP_FOUND);
-
-$httpProbe = new PhpProbe\Probe\HttpProbe('Google_HTTP', array(), new \PhpProbe\Adapter\PhpCurlAdapter());
-$httpProbe
-    ->url('http://www.google.com/')
-    ->addChecker($checkerHttp);
-
 /* HTTPS Probe */
 $checkerHttps = new PhpProbe\Check\HttpCheck();
 $checkerHttps
     ->addCriterion('httpCode', \PhpProbe\Http\Codes::HTTP_NOT_FOUND)
     ->addCriterion('content', 'G[o]+ggle');
 
-$logger = new \Monolog\Logger('https');
+$logger = new \Monolog\Logger('PhpProbe');
 
 $httpsProbe = new PhpProbe\Probe\HttpProbe('Google_HTTPS', array(), new \PhpProbe\Adapter\PhpCurlAdapter());
 $httpsProbe
@@ -34,7 +25,6 @@ $httpsProbe
 $manager = new PhpProbe\Manager();
 $manager
     ->addProbe($tcpProbe)
-    ->addProbe($httpProbe)
     ->addProbe($httpsProbe)
     ->checkAll();
 

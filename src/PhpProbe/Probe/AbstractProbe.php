@@ -4,10 +4,10 @@ namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
-use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
 use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * Class AbstractProbe
@@ -21,11 +21,6 @@ abstract class AbstractProbe implements ProbeInterface
      * @var string
      */
     protected $status = ProbeInterface::STATUS_UNKNOWN;
-
-    /**
-     * @var bool
-     */
-    protected $success = false;
 
     /**
      * @var array
@@ -61,6 +56,11 @@ abstract class AbstractProbe implements ProbeInterface
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var string PSR-3 compliant log level
+     */
+    protected $level = LogLevel::ALERT;
 
     /**
      * @param string           $name
@@ -115,8 +115,15 @@ abstract class AbstractProbe implements ProbeInterface
         /** @var AbstractAdapterResponse $response */
         $response = $this->adapter->getResponse();
 
+        $logContext = array(
+            'probe' => $this->getName()
+        );
+
         if ($response->isFailure()) {
             $this->failed($response->getError());
+            if ($this->logger) {
+                $this->logger->log($this->getLevel(), $response->getError(), $logContext);
+            }
             return;
         }
 
@@ -126,25 +133,21 @@ abstract class AbstractProbe implements ProbeInterface
             $checkerError = $checker->check($response);
             if ($this->logger) {
                 foreach ($checkerError as $singleError) {
-                    $this->logger->log($checker->getLevel(), $singleError);
+                    $this->logger->log($checker->getLevel(), $singleError, $logContext);
                 }
             }
-            $errors       = array_merge($errors, $checkerError);
+            $errors = array_merge($errors, $checkerError);
         }
 
         if ($response->isSuccessful() && !count($errors)) {
             $this->succeeded();
             return;
-        }
-
-        if (count($errors)) {
+        } elseif (count($errors)) {
             $this->failed($errors);
             return;
         }
 
-        if ($response->getStatus() == AdapterResponseInterface::STATUS_UNKNOWN) {
-            $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
-        }
+        $this->failed(ProbeInterface::NO_REASON_FAIL_MESSAGE);
     }
 
     /**
@@ -368,5 +371,21 @@ abstract class AbstractProbe implements ProbeInterface
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 }
