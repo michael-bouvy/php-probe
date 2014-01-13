@@ -71,16 +71,19 @@ Calling `$manager->output(true)` will print results (including success) that wil
 $webservice = new PhpProbe\Probe\HttpProbe(
     'GitHub_HTTPS',
     array(),
-    new \PhpProbe\Adapter\PhpCurl()
+    new \PhpProbe\Adapter\PhpCurlAdapter()
 );
-$webservice
-    ->url('https://api.github.com/repos/michael-bouvy/php-probe')
-    ->expectedHttpCode(\PhpProbe\Http\Codes::HTTP_OK);
+
+$webservice->url('https://api.github.com/repos/michael-bouvy/php-probe');
+
+$httpChecker = new \PhpProbe\Check\HttpCheck();
+$httpChecker->addCriterion('httpCode', \PhpProbe\Http\Codes::HTTP_FORBIDDEN);
+$webservice->addChecker($httpChecker);
 
 $webservice->check();
 
 if ($webservice->hasSucceeded()) {
-    // Do something
+    // Do something cool
 }
 ```
 
