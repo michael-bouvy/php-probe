@@ -3,9 +3,9 @@ PhpProbe [![Build Status](https://travis-ci.org/michael-bouvy/php-probe.png?bran
 
 PhpProbe is a PHP library allowing to simply probe/monitor any applications and services, and either print results or use them in code.
 
-This library (especially because it's _only_ a library) has no
-
 Also, PhpProbe respects PSR-0/1/2 and PSR-3, meaning (among others) it can be used with any [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md) compliant logger (see `setLogger()` on `Probe`s) like [Monolog](https://github.com/Seldaek/monolog).
+
+Note that this library (especially because it's _only_ a library) is not intended to be used instead of monitoring tools like Nagios, which already do the job.
 
 Core concepts
 -----------
