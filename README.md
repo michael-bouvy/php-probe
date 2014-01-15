@@ -184,7 +184,7 @@ These probes can be used with one or more of the following checkers:
 ###Checkers and their criterions
 * `HttpCheck`:
  * `httpCode`: self-explanatory
- * `content`: check for a given value in the reponse content (also works with regular expressions ; case insensitive)
+ * `content`: check for a given value in the response content (also works with regular expressions ; case insensitive)
 * `DatabaseCheck`:
  * `database`: check for one (or multiple) existing database(s) for connected user
 * `GenericCheck`:
