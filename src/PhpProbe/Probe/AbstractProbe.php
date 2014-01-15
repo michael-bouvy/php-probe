@@ -218,6 +218,16 @@ abstract class AbstractProbe implements ProbeInterface
     }
 
     /**
+     * Check if probe has partially succeeded
+     *
+     * @return bool
+     */
+    public function hasPartiallySucceeded()
+    {
+        return ($this->hasFailed() && $this->getAdapter()->getResponse()->isSuccessful());
+    }
+
+    /**
      * Set probe as success
      *
      * @return void

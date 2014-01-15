@@ -46,19 +46,27 @@ interface ProbeInterface
 
     /**
      * Returns true if probe has failed ; ie. connection could not be established
-     * OR one or more checkers associated with probe didn't success
+     * OR one or more checker(s) associated with probe didn't success
      *
      * @return bool
      */
     public function hasFailed();
 
     /**
-     * Returns false if probe has succeeded ; ie. connection has been established
+     * Returns true if probe has succeeded ; ie. connection has been established
      * AND all checkers (if any) associated with probe did success
      *
      * @return bool
      */
     public function hasSucceeded();
+
+    /**
+     * Returns true if probe has partially succeeded ; ie. connection has been established
+     * but one or more checker(s) associated with probe didn't success
+     *
+     * @return bool
+     */
+    public function hasPartiallySucceeded();
 
     /**
      * Get an array of the error messages associated with the probe and it's checkers
