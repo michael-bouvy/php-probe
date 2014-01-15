@@ -4,6 +4,7 @@ namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Check\CheckInterface;
+use PhpProbe\Exception\ConfigurationException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -27,6 +28,8 @@ interface ProbeInterface
     public function __construct($name, $options = array(), AdapterInterface $adapter = null);
 
     /**
+     * Configure probe's options (upon it's expectedOptions array property)
+     *
      * @param array $options
      *
      * @return $this
@@ -34,21 +37,34 @@ interface ProbeInterface
     public function configure(array $options);
 
     /**
+     * Use specified adapter and run probe and associated checkers
+     *
+     * @throws ConfigurationException
      * @return void
      */
     public function check();
 
     /**
+     * Returns true if probe has failed ; ie. connection could not be established
+     * OR one or more checkers associated with probe didn't success
+     *
      * @return bool
      */
     public function hasFailed();
 
     /**
+     * Returns false if probe has succeeded ; ie. connection has been established
+     * AND all checkers (if any) associated with probe did success
+     *
      * @return bool
      */
     public function hasSucceeded();
 
     /**
+     * Get an array of the error messages associated with the probe and it's checkers
+     *
+     * This array will be empty if probe is successful (see hasSucceeded() method)
+     *
      * @return array
      */
     public function getErrorMessages();
@@ -68,6 +84,8 @@ interface ProbeInterface
     public function getName();
 
     /**
+     * Set the adapter to use with the probe
+     *
      * @param AdapterInterface $adapter
      *
      * @return mixed
@@ -75,6 +93,24 @@ interface ProbeInterface
     public function setAdapter(AdapterInterface $adapter);
 
     /**
+     * Get the current associated adapter for probe
+     *
+     * @return AdapterInterface
+     */
+    public function getAdapter();
+
+    /**
+     * Get probe's default adapter, as setting an adapter is not mandatory
+     *
+     * @return AdapterInterface
+     */
+    public function getDefaultAdapter();
+
+    /**
+     * Check configurations options (passed through constructor or configure() method)
+     * against expectedOptions array property.
+     *
+     * @throws ConfigurationException
      * @return void
      */
     public function checkConfiguration();
@@ -95,18 +131,6 @@ interface ProbeInterface
      * @return array
      */
     public function getExpectedOptions();
-
-    /**
-     * Get probe's default adapter
-     *
-     * @return AdapterInterface
-     */
-    public function getDefaultAdapter();
-
-    /**
-     * @return AdapterInterface
-     */
-    public function getAdapter();
 
     /**
      * Set a PSR-3 compliant logger
