@@ -7,6 +7,10 @@ Also, PhpProbe respects PSR-0/1/2 and PSR-3, meaning (among others) it can be us
 
 Note that this library (especially because it's _only_ a library) is not intended to be used instead of monitoring tools like Nagios, which already do the job.
 
+Here's an example what you can simply do with PhpProbe and a few lines of code (see [php-probe-webapp](https://github.com/michael-bouvy/php-probe-webapp) for sources):
+
+![Screenshot](https://raw2.github.com/michael-bouvy/php-probe-webapp/master/screenshot.png "PhpProbe webapp screenshot")
+
 Core concepts
 -----------
 
