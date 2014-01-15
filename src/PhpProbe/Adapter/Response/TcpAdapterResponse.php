@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpProbe\Adapter\Reponse;
+namespace PhpProbe\Adapter\Response;
 
 /**
  * Class TcpAdapterResponse
@@ -9,7 +9,7 @@ namespace PhpProbe\Adapter\Reponse;
  * @method double getResponseTime()
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
- * @package PhpProbe\Adapter\Reponse
+ * @package PhpProbe\Adapter\Response
  */
 class TcpAdapterResponse extends AbstractAdapterResponse
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace PhpProbe\Adapter\Reponse;
+namespace PhpProbe\Adapter\Response;
 
 /**
- * Class NullAdapterResponse
+ * Class TestAdapterResponse
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
- * @package PhpProbe\Adapter\Reponse
+ * @package PhpProbe\Adapter\Response
  */
-class NullAdapterResponse extends AbstractAdapterResponse
+class TestAdapterResponse extends AbstractAdapterResponse
 {
     /**
      * {@inheritdoc}

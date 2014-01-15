@@ -2,7 +2,7 @@
 
 namespace PhpProbe\Adapter;
 
-use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
+use PhpProbe\Adapter\Response\AdapterResponseInterface;
 
 /**
  * Interface AdapterInterface

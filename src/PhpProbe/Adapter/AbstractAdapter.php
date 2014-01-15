@@ -2,7 +2,7 @@
 
 namespace PhpProbe\Adapter;
 
-use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
+use PhpProbe\Adapter\Response\AdapterResponseInterface;
 
 /**
  * Class AbstractAdapter
@@ -18,7 +18,7 @@ abstract class AbstractAdapter implements AdapterInterface
     protected $response = null;
 
     /**
-     * @param Reponse\AdapterResponseInterface $response
+     * @param Response\AdapterResponseInterface $response
      */
     protected function setResponse(AdapterResponseInterface $response)
     {

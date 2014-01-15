@@ -2,7 +2,7 @@
 
 namespace PhpProbe\Check;
 
-use \PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
+use \PhpProbe\Adapter\Response\AbstractAdapterResponse;
 
 /**
  * Interface CheckInterface

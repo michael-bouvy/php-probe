@@ -2,8 +2,8 @@
 
 namespace PhpProbe\Check;
 
-use PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
-use \PhpProbe\Adapter\Reponse\HttpAdapterResponse;
+use PhpProbe\Adapter\Response\AbstractAdapterResponse;
+use \PhpProbe\Adapter\Response\HttpAdapterResponse;
 
 /**
  * Class HttpCheck

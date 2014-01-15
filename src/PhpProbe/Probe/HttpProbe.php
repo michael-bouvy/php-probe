@@ -4,7 +4,7 @@ namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Adapter\PhpCurlAdapter;
-use PhpProbe\Adapter\Reponse\HttpAdapterResponse;
+use PhpProbe\Adapter\Response\HttpAdapterResponse;
 
 /**
  * Class HttpProbe

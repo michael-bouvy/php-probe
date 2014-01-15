@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpProbe\Adapter\Reponse;
+namespace PhpProbe\Adapter\Response;
 
 use PhpProbe\Exception\ConfigurationException;
 
@@ -10,7 +10,7 @@ use PhpProbe\Exception\ConfigurationException;
  * @method void   setError()
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
- * @package PhpProbe\Adapter\Reponse
+ * @package PhpProbe\Adapter\Response
  */
 class AbstractAdapterResponse implements AdapterResponseInterface
 {

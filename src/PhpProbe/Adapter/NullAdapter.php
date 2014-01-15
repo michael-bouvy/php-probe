@@ -2,7 +2,7 @@
 
 namespace PhpProbe\Adapter;
 
-use PhpProbe\Adapter\Reponse\NullAdapterResponse;
+use PhpProbe\Adapter\Response\NullAdapterResponse;
 
 /**
  * Class NullAdapter

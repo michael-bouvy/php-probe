@@ -4,7 +4,7 @@ namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Adapter\PhpMysqlAdapter;
-use PhpProbe\Adapter\Reponse\DatabaseAdapterResponse;
+use PhpProbe\Adapter\Response\DatabaseAdapterResponse;
 
 /**
  * Class DatabaseProbe

@@ -3,8 +3,8 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
-use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
-use PhpProbe\Adapter\Reponse\TestAdapterResponse;
+use PhpProbe\Adapter\Response\AdapterResponseInterface;
+use PhpProbe\Adapter\Response\TestAdapterResponse;
 use PhpProbe\Adapter\TestAdapter;
 
 /**

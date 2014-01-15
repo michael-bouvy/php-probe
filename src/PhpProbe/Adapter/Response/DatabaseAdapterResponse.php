@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpProbe\Adapter\Reponse;
+namespace PhpProbe\Adapter\Response;
 
 /**
  * Class DatabaseAdapterResponse
@@ -12,7 +12,7 @@ namespace PhpProbe\Adapter\Reponse;
  * @method array  getDatabases()
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
- * @package PhpProbe\Adapter\Reponse
+ * @package PhpProbe\Adapter\Response
  */
 class DatabaseAdapterResponse extends AbstractAdapterResponse
 {

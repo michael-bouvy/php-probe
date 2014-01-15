@@ -2,8 +2,8 @@
 
 namespace PhpProbe\Adapter;
 
-use PhpProbe\Adapter\Reponse\AdapterResponseInterface;
-use PhpProbe\Adapter\Reponse\HttpAdapterResponse;
+use PhpProbe\Adapter\Response\AdapterResponseInterface;
+use PhpProbe\Adapter\Response\HttpAdapterResponse;
 use PhpProbe\Helper\AdapterHelper;
 
 /**

@@ -1,7 +1,7 @@
 <?php
 namespace PhpProbe\Check;
 
-use PhpProbe\Adapter\Reponse\DatabaseAdapterResponse;
+use PhpProbe\Adapter\Response\DatabaseAdapterResponse;
 
 /**
  * Class DatabaseCheck

@@ -3,7 +3,7 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
-use PhpProbe\Adapter\Reponse\AbstractAdapterResponse;
+use PhpProbe\Adapter\Response\AbstractAdapterResponse;
 use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
 use Psr\Log\LoggerInterface;
