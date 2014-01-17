@@ -3,7 +3,9 @@
 namespace PhpProbe\Probe;
 
 use PhpProbe\Adapter\AdapterInterface;
+use PhpProbe\Adapter\NullAdapter;
 use PhpProbe\Adapter\Response\AbstractAdapterResponse;
+use PhpProbe\Adapter\TestAdapter;
 use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
 use Psr\Log\LoggerInterface;
@@ -274,36 +276,56 @@ abstract class AbstractProbe implements ProbeInterface
                 throw new ConfigurationException("Expected options must have a name.");
             }
 
-            if (isset($expectedOption['required'])
-                && $expectedOption['required'] === true
-                && !isset($this->options[$name])
-            ) {
-                throw new ConfigurationException(
-                    sprintf(
-                        "%s probe : missing option '%s'.",
-                        $this->getName(),
-                        $name
-                    )
-                );
-            }
-
-            if (isset($this->options[$name])) {
-                $currentOption = $this->options[$name];
-                if (isset($expectedOption['type']) && gettype($currentOption) != $expectedOption['type']) {
-                    throw new ConfigurationException(
-                        sprintf(
-                            "%s probe Bad value type for '%s' ; expected %s, got %s.",
-                            $this->getName(),
-                            $name,
-                            $expectedOption['type'],
-                            gettype($currentOption)
-                        )
-                    );
-                }
-            }
+            $this->checkRequiredOption($name, $expectedOption);
+            $this->checkOptionType($name, $expectedOption);
         }
 
         $this->checkAdapter();
+    }
+
+    /**
+     * @param string $name
+     * @param array $expectedOption
+     *
+     * @throws \PhpProbe\Exception\ConfigurationException
+     */
+    protected function checkRequiredOption($name, $expectedOption)
+    {
+        if (isset($expectedOption['required'])
+            && $expectedOption['required'] === true
+            && !isset($this->options[$name])) {
+            throw new ConfigurationException(
+                sprintf(
+                    "%s probe : missing option '%s'.",
+                    $this->getName(),
+                    $name
+                )
+            );
+        }
+    }
+
+    /**
+     * @param string $name
+     * @param array $expectedOption
+     *
+     * @throws \PhpProbe\Exception\ConfigurationException
+     */
+    protected function checkOptionType($name, $expectedOption)
+    {
+        if (isset($this->options[$name])) {
+            $currentOption = $this->options[$name];
+            if (isset($expectedOption['type']) && gettype($currentOption) != $expectedOption['type']) {
+                throw new ConfigurationException(
+                    sprintf(
+                        "%s probe Bad value type for '%s' ; expected %s, got %s.",
+                        $this->getName(),
+                        $name,
+                        $expectedOption['type'],
+                        gettype($currentOption)
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -397,5 +419,13 @@ abstract class AbstractProbe implements ProbeInterface
     public function getLevel()
     {
         return $this->level;
+    }
+
+    /**
+     * @return AdapterInterface
+     */
+    public function getDefaultAdapter()
+    {
+        return new NullAdapter();
     }
 }
