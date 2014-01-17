@@ -189,12 +189,12 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function failed($reason)
     {
+        $this->status = ProbeInterface::STATUS_FAILED;
         if (is_array($reason)) {
             $this->error = array_merge($this->error, $reason);
-        } else {
-            $this->error[] = $reason;
+            return;
         }
-        $this->status = ProbeInterface::STATUS_FAILED;
+        $this->error[] = $reason;
     }
 
     /**
