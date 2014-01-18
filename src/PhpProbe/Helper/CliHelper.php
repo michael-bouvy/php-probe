@@ -27,7 +27,7 @@ class CliHelper
     /**
      * Get a handler for ExitException
      *
-     * @return callable
+     * @return \Closure
      */
     public static function getExitExceptionHandler()
     {

@@ -80,7 +80,7 @@ class TestProbe extends AbstractProbe implements ProbeInterface
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getErrorMessages()
     {

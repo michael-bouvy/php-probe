@@ -32,6 +32,7 @@ interface AdapterResponseInterface
      * - AdapterResponseInterface::STATUS_UNKNOWN
      *
      * @param string $status
+     * @return void
      */
     public function setStatus($status);
 

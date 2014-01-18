@@ -24,6 +24,7 @@ interface ProbeInterface
      * @param string           $name    Probe name
      * @param array            $options Configuration array (optional)
      * @param AdapterInterface $adapter Adapter to use (optional)
+     * @return ProbeInterface
      */
     public function __construct($name, $options = array(), AdapterInterface $adapter = null);
 

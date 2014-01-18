@@ -5,7 +5,6 @@ namespace PhpProbe\Probe;
 use PhpProbe\Adapter\AdapterInterface;
 use PhpProbe\Adapter\NullAdapter;
 use PhpProbe\Adapter\Response\AbstractAdapterResponse;
-use PhpProbe\Adapter\TestAdapter;
 use PhpProbe\Check\CheckInterface;
 use PhpProbe\Exception\ConfigurationException;
 use Psr\Log\LoggerInterface;
@@ -390,7 +389,7 @@ abstract class AbstractProbe implements ProbeInterface
     /**
      * Get the adapter associated with probe
      *
-     * @return AdapterInterface|null
+     * @return AdapterInterface
      */
     public function getAdapter()
     {

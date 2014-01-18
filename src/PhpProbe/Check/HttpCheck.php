@@ -32,7 +32,7 @@ class HttpCheck extends AbstractCheck
      * @param HttpAdapterResponse $response The response object
      * @param string              $search   Search criterion
      *
-     * @return mixed
+     * @return string|boolean
      */
     protected function checkContent(HttpAdapterResponse $response, $search)
     {

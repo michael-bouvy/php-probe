@@ -17,7 +17,7 @@ class DatabaseCheck extends AbstractCheck
      * @param DatabaseAdapterResponse $response
      * @param string|array            $database
      *
-     * @return mixed
+     * @return string|boolean
      */
     protected function checkDatabase(DatabaseAdapterResponse $response, $database)
     {

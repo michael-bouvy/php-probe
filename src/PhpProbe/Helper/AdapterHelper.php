@@ -19,7 +19,7 @@ class AdapterHelper
     /**
      * Check if a PHP extension is loaded
      *
-     * @param $extension
+     * @param string $extension
      *
      * @throws \RuntimeException
      */
