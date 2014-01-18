@@ -33,7 +33,7 @@ class Manager
     /**
      * @var string Template filename/path
      */
-    protected $template = 'Assets/Templates/output-text.php';
+    protected $template = 'Assets/Templates/output-text.tpl';
 
     /**
      * @param string $template
@@ -136,7 +136,7 @@ class Manager
     public function outputHtml($includeSuccess = false, $httpHeader = true, $template = '')
     {
         if (empty($template) || !file_exists($template)) {
-            $template = __DIR__ . '/Assets/Templates/output-html.php';
+            $template = __DIR__ . '/Assets/Templates/output-html.tpl';
         }
         $this->output($includeSuccess, $httpHeader, $template);
         return $this;
@@ -156,7 +156,7 @@ class Manager
     public function outputText($includeSuccess = false, $httpHeader = true, $template = '')
     {
         if (empty($template) || !file_exists($template)) {
-            $template = __DIR__ . '/Assets/Templates/output-text.php';
+            $template = __DIR__ . '/Assets/Templates/output-text.tpl';
         }
         $this->output($includeSuccess, $httpHeader, $template);
         return $this;

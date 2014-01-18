@@ -1,5 +1,5 @@
 config:
-  template: Assets/Templates/output-text.php
+  template: Assets/Templates/output-text.tpl
 probes:
   Google.com_HTTP:
     type: Http

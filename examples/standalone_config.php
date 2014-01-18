@@ -13,6 +13,6 @@ if (php_sapi_name() == 'cli') {
         ->end();
 } else {
     $manager
-        ->output(true, true, 'Assets/Templates/output-html.php')
+        ->output(true, true, 'Assets/Templates/output-html.tpl')
         ->end();
 }
