@@ -95,7 +95,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *@covers PhpProbe\Manager::outputText
+     *@covers PhpProbe\Manager::output
      */
     public function testOutputTextWithSuccess()
     {
@@ -107,7 +107,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $probeMock->setAdapter(new TestAdapter());
         $manager->addProbe($probeMock);
         ob_start();
-        $output = $manager->checkAll()->outputText(true);
+        $output = $manager->checkAll()->output(true);
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -117,7 +117,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *@covers PhpProbe\Manager::outputText
+     *@covers PhpProbe\Manager::output
      */
     public function testOutputTextWithFailure()
     {
@@ -129,7 +129,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $probeMock->setAdapter(new TestAdapter());
         $manager->addProbe($probeMock);
         ob_start();
-        $output = $manager->checkAll()->outputText();
+        $output = $manager->checkAll()->output();
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -139,7 +139,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers PhpProbe\Manager::outputHtml
+     * @covers PhpProbe\Manager::output
      */
     public function testOutputHtmlWithSuccess()
     {
@@ -151,7 +151,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $probeMock->setAdapter(new TestAdapter());
         $manager->addProbe($probeMock);
         ob_start();
-        $output = $manager->checkAll()->outputHtml(true);
+        $output = $manager->checkAll()->output(true, false, 'Assets/Templates/output-html.tpl');
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -161,7 +161,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers PhpProbe\Manager::outputHtml
+     * @covers PhpProbe\Manager::output
      */
     public function testOutputHtmlWithFailure()
     {
@@ -173,13 +173,40 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $probeMock->setAdapter(new TestAdapter());
         $manager->addProbe($probeMock);
         ob_start();
-        $output = $manager->checkAll()->outputHtml();
+        $output = $manager->checkAll()->output(false, false, 'Assets/Templates/output-html.tpl');
         $content = ob_get_contents();
         ob_end_clean();
 
         $this->assertInstanceOf('PhpProbe\Manager', $output);
         $this->assertContains('testProbe', $content);
         $this->assertContains('Failure', $content);
+    }
+
+    /**
+     *@covers PhpProbe\Manager::output
+     */
+    public function testOutputWithoutSpecifiedTemplate()
+    {
+        $manager = new Manager();
+        $probeMock   = $this->getMock('PhpProbe\Probe\TestProbe', array('hasFailed'), array('testProbe'));
+        $probeMock->expects($this->any())->method('hasFailed')->will($this->returnValue(false));
+
+        /* @var ProbeInterface $probeMock */
+        $probeMock->setAdapter(new TestAdapter());
+        $manager->addProbe($probeMock);
+        $template = __DIR__ . '/../assets/output-test.tpl';
+        $manager->setTemplate($template);
+        $manager->checkAll();
+        ob_start();
+        $output = $manager->output(true);
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertInstanceOf('PhpProbe\Manager', $output);
+        $this->assertContains('testProbe', $content);
+        $this->assertContains('Success', $content);
+        $this->assertContains('Test template', $content);
+        $this->assertAttributeEquals($template, 'template', $manager);
     }
 
     /**
@@ -235,6 +262,16 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new Manager();
         $this->setExpectedException('\RuntimeException');
         $manager->importConfig(__DIR__ . '/../assets/missing_config_file.yml');
+    }
+
+    /**
+     * @covers PhpProbe\Manager::importConfig
+     */
+    public function testImportConfigWithSpecificTemplate()
+    {
+        $manager = new Manager();
+        $manager->importConfig(__DIR__ . '/../assets/config_manager_with_template.yml');
+        $this->assertAttributeContains('output-test.tpl', 'template', $manager);
     }
 
     /**

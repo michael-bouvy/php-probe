@@ -1,0 +1,8 @@
+config:
+  template: ../../tests/assets/output-test.tpl
+probes:
+  testProbe2:
+      type: Test
+      adapter: Test
+      options:
+        param: value

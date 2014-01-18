@@ -110,10 +110,8 @@ class Manager
             }
         }
 
-        if ($httpHeader === true && $this->hasFailures()) {
-            HttpHelper::setFailHttpHeader();
-        } elseif ($httpHeader === true && !$this->hasFailures()) {
-            HttpHelper::setSuccessHttpHeader();
+        if ($httpHeader === true) {
+            $this->setHttpHeaders();
         }
 
         $probes = $this->probes;
@@ -123,43 +121,17 @@ class Manager
     }
 
     /**
-     * Output result of probes in HTML
+     * Set HTTP headers depending on global success or failure
      *
-     * @deprecated
-     *
-     * @param bool   $includeSuccess Include success messages in output or not
-     * @param bool   $httpHeader     Send HTTP headers
-     * @param string $template       Template filename
-     *
-     * @return $this
+     * @return void
      */
-    public function outputHtml($includeSuccess = false, $httpHeader = true, $template = '')
+    protected function setHttpHeaders()
     {
-        if (empty($template) || !file_exists($template)) {
-            $template = __DIR__ . '/Assets/Templates/output-html.tpl';
+        if ($this->hasFailures()) {
+            HttpHelper::setFailHttpHeader();
+            return;
         }
-        $this->output($includeSuccess, $httpHeader, $template);
-        return $this;
-    }
-
-    /**
-     * Output result of probes in plain text
-     *
-     * @deprecated
-     *
-     * @param bool   $includeSuccess Include success messages in output or not
-     * @param bool   $httpHeader     Send HTTP headers
-     * @param string $template       Template filename
-     *
-     * @return $this
-     */
-    public function outputText($includeSuccess = false, $httpHeader = true, $template = '')
-    {
-        if (empty($template) || !file_exists($template)) {
-            $template = __DIR__ . '/Assets/Templates/output-text.tpl';
-        }
-        $this->output($includeSuccess, $httpHeader, $template);
-        return $this;
+        HttpHelper::setSuccessHttpHeader();
     }
 
     /**
