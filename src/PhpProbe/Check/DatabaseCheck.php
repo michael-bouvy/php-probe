@@ -26,9 +26,7 @@ class DatabaseCheck extends AbstractCheck
             if (count($diff)) {
                 return sprintf("Databases '%s' not found.", implode(", ", $diff));
             }
-        }
-
-        if (!is_array($database) && !in_array($database, $response->getDatabases())) {
+        } elseif (!in_array($database, $response->getDatabases())) {
             return sprintf("Database '%s' not found.", $database);
         }
 
