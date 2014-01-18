@@ -206,7 +206,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function hasFailed()
     {
-        return ($this->status == ProbeInterface::STATUS_FAILED);
+        return ($this->status == ProbeInterface::STATUS_FAILED && !$this->getAdapter()->getResponse()->isSuccessful());
     }
 
     /**
@@ -216,7 +216,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function hasSucceeded()
     {
-        return ($this->status == ProbeInterface::STATUS_SUCCESS);
+        return ($this->status == ProbeInterface::STATUS_SUCCESS && $this->getAdapter()->getResponse()->isSuccessful());
     }
 
     /**
@@ -226,7 +226,7 @@ abstract class AbstractProbe implements ProbeInterface
      */
     public function hasPartiallySucceeded()
     {
-        return ($this->hasFailed() && $this->getAdapter()->getResponse()->isSuccessful());
+        return ($this->status == ProbeInterface::STATUS_FAILED && $this->getAdapter()->getResponse()->isSuccessful());
     }
 
     /**

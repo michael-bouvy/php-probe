@@ -20,7 +20,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * @param Response\AdapterResponseInterface $response
      */
-    protected function setResponse(AdapterResponseInterface $response)
+    public function setResponse(AdapterResponseInterface $response)
     {
         $this->response = $response;
     }

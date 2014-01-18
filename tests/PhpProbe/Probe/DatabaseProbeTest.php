@@ -44,7 +44,7 @@ class DatabaseProbeTest extends \PHPUnit_Framework_TestCase
         $adapterResponse->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
 
         $adapterMock = $this->getMock('PhpProbe\Adapter\TestAdapter', array('getResponse'));
-        $adapterMock->expects($this->once())
+        $adapterMock->expects($this->any())
             ->method('getResponse')
             ->will($this->returnValue($adapterResponse));
 
@@ -70,7 +70,7 @@ class DatabaseProbeTest extends \PHPUnit_Framework_TestCase
         $adapterResponse->setError('Test Adapter Error message');
 
         $adapterMock = $this->getMock('PhpProbe\Adapter\TestAdapter', array('getResponse'));
-        $adapterMock->expects($this->once())
+        $adapterMock->expects($this->any())
             ->method('getResponse')
             ->will($this->returnValue($adapterResponse));
 
