@@ -197,7 +197,11 @@ These probes can be used with one or more of the following checkers:
 
 ### Using Composer
 
-Just require the PhpProbe library in your `composer.json`:
+```
+composer require php-probe/php-probe
+```
+
+Or manually, add the PhpProbe library to your `composer.json`:
 
 ```json
 {
