@@ -154,21 +154,21 @@ Probes rely on adapters: for instance `TcpProbe` can either work with PHP's `fso
 ### Probes, adapters & their options
 
 * `TcpProbe`
- * `FsockopenAdapter` (uses PHP's `fsockopen()` function)
- * `NetcatAdapter` (uses `netcat` utility)
- * Probe options:
+  * `FsockopenAdapter` (uses PHP's `fsockopen()` function)
+  * `NetcatAdapter` (uses `netcat` utility)
+  * Probe options:
     * `host`: hostname or IP without protocol (eg. `1.2.3.4`)
     * `port`: self-explanatory
     * `timeout`: request timeout in seconds
 * `HttpProbe`: check for HTTP response code or response content
- * `PhpCurlAdapter` (uses PHP's curl extension)
- * Probe options:
+  * `PhpCurlAdapter` (uses PHP's curl extension)
+  * Probe options:
     * `url`: URL to check, including protocol (eg. `http://www.mysite.com/mypage.php`)
     * `timeout`: request timeout in seconds
     * `headers`: an array of HTTP headers to send (eg. `['Cache-control: no-cache', 'Cookie: key=value']`)
 * `DatabaseProbe`: check for database connection or existing database
- * `PhpMysqlAdapter` (uses PHP's mysql extension)
- * Probe options:
+  * `PhpMysqlAdapter` (uses PHP's mysql extension)
+  * Probe options:
     * `host`: hostname or IP without protocol (eg. `1.2.3.4`)
     * `database`: database name (not used by `PhpMysqlAdapter` (see checker below), will be necessary for future PostgreSQL adapter)
     * `user`: username
@@ -176,7 +176,7 @@ Probes rely on adapters: for instance `TcpProbe` can either work with PHP's `fso
     * `timeout`: connection timeout, not used yet
 
 * `TestProbe`: for testing purposes
- * `TestAdapter`
+  * `TestAdapter`
 
 A `NullAdapter` is also available, always succeeding.
 
@@ -185,12 +185,12 @@ These probes can be used with one or more of the following checkers:
 ### Checkers and their criterions
 
 * `HttpCheck`:
- * `httpCode`: self-explanatory
- * `content`: check for a given value in the response content (also works with regular expressions ; case insensitive)
+  * `httpCode`: self-explanatory
+  * `content`: check for a given value in the response content (also works with regular expressions ; case insensitive)
 * `DatabaseCheck`:
- * `database`: check for one (or multiple) existing database(s) for connected user
+  * `database`: check for one (or multiple) existing database(s) for connected user
 * `GenericCheck`:
- * `responseTime`: check if probe's response time is below the given value
+  * `responseTime`: check if probe's response time is below the given value
 * `TestCheck`: for testing purposes
 
 ## Installation
