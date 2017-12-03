@@ -1,5 +1,4 @@
-PhpProbe [![Build Status](https://travis-ci.org/michael-bouvy/php-probe.png?branch=master)](https://travis-ci.org/michael-bouvy/php-probe)
-=========
+# PhpProbe
 
 PhpProbe is a PHP library allowing to simply probe/monitor any applications and services, and either print results or use them in code.
 
@@ -9,10 +8,9 @@ Note that this library (especially because it's _only_ a library) is not intende
 
 Here's an example what you can simply do with PhpProbe and a few lines of code (see [php-probe-webapp](https://github.com/michael-bouvy/php-probe-webapp) for sources):
 
-![Screenshot](https://raw2.github.com/michael-bouvy/php-probe-webapp/master/screenshot.png "PhpProbe webapp screenshot")
+![Screenshot](https://raw.githubusercontent.com/michael-bouvy/php-probe-webapp/master/screenshot.png "PhpProbe webapp screenshot")
 
-Core concepts
------------
+## Core concepts
 
 A `Probe` (eg. Tcp, Http, Database) relies on a (compatible) `Adapter` (eg. Netcat, PhpCurl, PhpMysql), which will return an `AdapterResponse`, possibly containing data to test/check.
 
@@ -22,12 +20,11 @@ You can also add one or more `Check` to check for specific conditions (eg. respo
 
 Any PSR-3 compliant logger can also be attached to a `Probe`,(as [Monolog](https://github.com/Seldaek/monolog)), to be warned any error happening, by email for example. Monolog is shipped with several handlers that will certainly fit your needs. Each `Check` can have a defined log level, and therefore be handled by specific handlers.
 
-Usage
------------
+## Usage
 
 There are 2 ways this library can be used:
 
-####Standalone mode
+#### Standalone mode
 
 ```php
 <?php
@@ -69,7 +66,7 @@ Calling `$manager->output(true)` will print results (including success) that wil
 # Google_HTTPS - Failure (Expected value '404' for 'httpCode', got '302' - Expected content 'G[o]+ggle' not found in response.)
 ```
 
-####Inside a framework/tool
+#### Inside a framework/tool
 
 ```php
 $webservice = new PhpProbe\Probe\HttpProbe(
@@ -150,12 +147,12 @@ $manager->checkAll();
 
 See `examples/standalone_config.php`
 
-Available probes, adapters & checkers
------------
+## Available probes, adapters & checkers
 
 Probes rely on adapters: for instance `TcpProbe` can either work with PHP's `fsockopen()` function, or locally installed Unix utility `netcat`.
 
-####Probes, adapters & their options
+### Probes, adapters & their options
+
 * `TcpProbe`
  * `FsockopenAdapter` (uses PHP's `fsockopen()` function)
  * `NetcatAdapter` (uses `netcat` utility)
@@ -185,7 +182,8 @@ A `NullAdapter` is also available, always succeeding.
 
 These probes can be used with one or more of the following checkers:
 
-###Checkers and their criterions
+### Checkers and their criterions
+
 * `HttpCheck`:
  * `httpCode`: self-explanatory
  * `content`: check for a given value in the response content (also works with regular expressions ; case insensitive)
@@ -195,10 +193,9 @@ These probes can be used with one or more of the following checkers:
  * `responseTime`: check if probe's response time is below the given value
 * `TestCheck`: for testing purposes
 
-Installation
------------
+## Installation
 
-####Using Composer
+### Using Composer
 
 Just require the PhpProbe library in your `composer.json`:
 
@@ -210,7 +207,7 @@ Just require the PhpProbe library in your `composer.json`:
 }
 ```
 
-####From sources
+### From sources
 
 Clone the repository in your project:
 
@@ -231,13 +228,11 @@ If you already use a custom (non PSR-0 compliant) autoloader, you might want to 
 \PhpProbe\Autoloader::register(true);
 ```
 
-Contributors
------------
+# Contributors
 
 Special thanks to Julien CHICHIGNOUD ([@juchi](https://github.com/juchi/)) for his Checkers concept and implementation.
 
-Testing
------------
+# Testing
 
 To run the test suite, you need [composer](http://getcomposer.org).
 
@@ -246,7 +241,6 @@ $ php composer.phar install --dev
 $ vendor/bin/phpunit
 ```
 
-License
------------
+# License
 
 PhpProbe is licensed under the MIT license.
