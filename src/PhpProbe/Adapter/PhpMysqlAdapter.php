@@ -2,6 +2,7 @@
 
 namespace PhpProbe\Adapter;
 
+use PDO;
 use PhpProbe\Adapter\Response\AdapterResponseInterface;
 use PhpProbe\Adapter\Response\DatabaseAdapterResponse;
 use PhpProbe\Helper\AdapterHelper;
@@ -26,32 +27,51 @@ class PhpMysqlAdapter extends AbstractAdapter implements AdapterInterface
      */
     public function check(array $parameters)
     {
-        AdapterHelper::checkPhpExtension('mysql');
+        AdapterHelper::checkPhpExtension('pdo_mysql');
 
         $response = new DatabaseAdapterResponse();
 
-        if (false === $connection = mysql_connect(
-            $parameters['host'],
-            $parameters['user'],
-            $parameters['password']
-        )
-        ) {
-            $error = sprintf("Connection problem : %s", mysql_error());
+        $dsn = sprintf('mysql:host=%s', $parameters['host']);
+
+        try {
+            $dbh = new PDO(
+              $dsn,
+              $parameters['user'],
+              $parameters['password']
+            );
+        } catch (\Exception $e) {
+            $error = sprintf("Connection problem : %s", $e->getMessage());
             $response->setError($error);
             $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
             $this->setResponse($response);
+
             return $this;
-        } else {
-            $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
         }
 
-        $query = mysql_query('show databases', $connection);
+        $response->setStatus(AdapterResponseInterface::STATUS_SUCCESSFUL);
+
         $databases = array();
-        while ($row = mysql_fetch_assoc($query)) {
+        foreach ($dbh->query('show databases') as $row) {
             $databases[] = $row['Database'];
         }
-
         $response->setDatabases($databases);
+
+        if (isset($parameters['query'])) {
+            $query = $dbh->query($parameters['query']);
+            if ($query === false) {
+                $response->setError(implode(', ', $dbh->errorInfo()));
+                $response->setStatus(AdapterResponseInterface::STATUS_FAILED);
+                $this->setResponse($response);
+
+                return $this;
+            }
+
+            $column = $query->fetchColumn();
+            if ($column) {
+                $response->setResult($column);
+            }
+        }
+
         $this->setResponse($response);
 
         return $this;

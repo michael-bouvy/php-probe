@@ -7,7 +7,7 @@ use PhpProbe\Exception\ConfigurationException;
 /**
  * Class AbstractAdapterResponse
  *
- * @method void   setError()
+ * @method void   setError($error)
  *
  * @author  Michael BOUVY <michael.bouvy@gmail.com>
  * @package PhpProbe\Adapter\Response

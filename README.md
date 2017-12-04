@@ -174,6 +174,7 @@ Probes rely on adapters: for instance `TcpProbe` can either work with PHP's `fso
     * `user`: username
     * `password`: password, may be empty
     * `timeout`: connection timeout, not used yet
+    * `query`: SQL query to execute (must include database) for query result check (only first column of first row is used)
 
 * `TestProbe`: for testing purposes
   * `TestAdapter`
@@ -189,6 +190,7 @@ These probes can be used with one or more of the following checkers:
   * `content`: check for a given value in the response content (also works with regular expressions ; case insensitive)
 * `DatabaseCheck`:
   * `database`: check for one (or multiple) existing database(s) for connected user
+  * `query`: expected query result
 * `GenericCheck`:
   * `responseTime`: check if probe's response time is below the given value
 * `TestCheck`: for testing purposes

@@ -32,4 +32,23 @@ class DatabaseCheck extends AbstractCheck
 
         return true;
     }
+
+    /**
+     * Check for query result
+     *
+     * @param DatabaseAdapterResponse $response
+     * @param mixed                   $expectedResult Expected query result
+     *
+     * @return string|boolean
+     */
+    protected function checkQuery(DatabaseAdapterResponse $response, $expectedResult)
+    {
+        $result = $response->getResult();
+
+        if ($result != $expectedResult) {
+            return sprintf('Unexpected query result [%s] (expected [%s])', $result, $expectedResult);
+        }
+
+        return true;
+    }
 }
