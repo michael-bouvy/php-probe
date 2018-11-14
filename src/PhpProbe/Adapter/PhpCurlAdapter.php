@@ -75,5 +75,8 @@ class PhpCurlAdapter extends AbstractAdapter implements AdapterInterface
             curl_setopt($curlHandler, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($curlHandler, CURLOPT_SSL_VERIFYPEER, false);
         }
+        if (!empty($parameters['data'])) {
+            curl_setopt($curlHandler, CURLOPT_POSTFIELDS, json_encode($parameters['data']));
+        }
     }
 }
