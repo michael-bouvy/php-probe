@@ -24,7 +24,8 @@ class HttpProbe extends AbstractProbe implements ProbeInterface
         'url'      => array('name' => 'url', 'required' => true, 'type' => 'string'),
         'timeout'  => array('name' => 'timeout', 'required' => true, 'type' => 'integer', 'default' => 2),
         'headers'  => array('name' => 'headers', 'required' => true, 'type' => 'array', 'default' => array()),
-        'unsecure' => array('name' => 'unsecure', 'required' => true, 'type' => 'boolean', 'default' => false)
+        'unsecure' => array('name' => 'unsecure', 'required' => true, 'type' => 'boolean', 'default' => false),
+        'data'     => array('name' => 'data', 'required' => false, 'type' => 'array', 'default' => array())
     );
 
     /**
